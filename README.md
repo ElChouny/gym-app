@@ -1,19 +1,21 @@
 # FitTracker - App de Seguimiento de Entrenamiento 🏋️‍♂️
 
-FitTracker es un simulador de entrenamiento interactivo pensado para ofrecer un seguimiento completo de rutinas de gimnasio de forma accesible y gratuita.
+FitTracker es un simulador interactivo de seguimiento de entrenamiento para gimnasio desarrollado en JavaScript.
 
-## 📋 Descripción del Proyecto
-En este módulo, el programa funciona como un **módulo de configuración de perfil de atleta**, procesando datos del usuario para definir metas de peso y calcular estimaciones de volumen semanal de entrenamiento.
+## 📋 Evolución del Proyecto
+- **Módulo 1:** Configuración inicial del perfil de atleta (metas de peso y estimación de tiempo semanal).
+- **Módulo 2 (Pre-Entrega 2):** Registro dinámico de una sesión de entrenamiento mediante un simulador con bucles (`while`) y estructuras condicionales (`if / else if / else`). Permite desglosar la rutina por ejercicios, series y repeticiones por serie, clasificando el enfoque (Fuerza Máxima, Hipertrofia o Resistencia Muscular) e informando el volumen total acumulado.
 
-## 📥 Datos que Solicita el Programa
-Al cargar la página, la aplicación interactúa con el usuario solicitando:
-1. **Nombre del usuario**: Texto para personalizar el flujo.
-2. **Peso actual (en kg)**: Número (soporta decimales con `parseFloat`) para el punto de partida.
-3. **Peso objetivo (en kg)**: Número para calcular la masa a ganar o perder.
-4. **Días de entrenamiento por semana**: Número entero (1 a 7 con `parseInt`) para proyectar el volumen en minutos.
+## ⚙️ Lógica de Control de Flujo
+1. **Bucle de captura (`while`):** Registra múltiples ejercicios de forma iterativa hasta que el usuario ingresa la palabra clave `'ESC'`.
+2. **Estructuras condicionales:**
+   - Valida entradas numéricas positivas para series y repeticiones (`isNaN`).
+   - Clasifica el esfuerzo según repeticiones por serie (Fuerza, Hipertrofia o Resistencia).
+3. **Resumen acumulativo:** Muestra por alerta y consola total de ejercicios, series globales, volumen total de repeticiones y promedio por ejercicio.
 
 ## 🚀 Pasos para Probar el Proyecto
-1. Clona o descarga este repositorio en tu equipo.
-2. Abre el archivo `index.html` en tu navegador web preferido (o utiliza la extensión **Live Server** en Visual Studio Code).
-3. Interactúa con los mensajes emergentes (`prompt`) e ingresa tus datos.
-4. Presiona **F12** en el navegador para abrir la **Consola de Desarrollador** (pestaña *Console*) y visualizar la salida detallada y estructurada del procesamiento de datos.
+1. Abre `index.html` en tu navegador (o mediante **Live Server** en VS Code).
+2. Completa los datos de perfil inicial.
+3. Carga tus ejercicios indicando la cantidad de series y repeticiones por serie.
+4. Escribe `ESC` en el nombre del ejercicio para cerrar la sesión.
+5. Abre la consola de desarrollador (**F12**) para revisar el informe detallado y el resumen global.
