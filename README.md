@@ -4,30 +4,28 @@ FitTracker es un simulador interactivo para el registro y análisis de rutinas d
 
 ## 📋 Evolución del Proyecto
 
-- **Pre-Entrega 1:** Configuración inicial del perfil del atleta (cálculo de metas de peso y proyección de tiempo semanal).
-- **Pre-Entrega 2:** Control de flujo interactivo mediante bucles (`while`) y condicionales (`if / else`) para el registro continuo de ejercicios.
-- **Pre-Entrega 3:** Modularización con **Funciones Declaradas** y **Funciones Flecha**, paso de parámetros, retornos (`return`) y procesamiento encadenado.
-- **Pre-Entrega 4 (Actual):** Uso e interacción con **Arrays** para administrar el catálogo oficial de ejercicios del gimnasio (métodos de extremos, búsqueda, actualización por índice e iteración).
+- **Pre-Entrega 1 & 2:** Perfil de atleta, uso de variables, condicionales (`if/else`) y bucles (`while`).
+- **Pre-Entrega 3:** Modularización del código usando Funciones (Declaradas y Flecha).
+- **Pre-Entrega 4:** Manejo de Arrays, métodos de manipulación (`push`, `unshift`, `pop`) e iteración con `for...of`.
+- **Pre-Entrega 5 (Actual):** Modelado de datos mediante **Clases (Class)**, uso de `this`, métodos de instancia, y creación de objetos mediante el operador `new`.
 
-## 🛠️ Métodos y Operaciones con Arrays Implementadas
+## 🛠️ Implementación de Objetos y Clases
 
-1. **Creación e Inicialización:** Array `catalogoEjercicios` con 5 elementos semánticos iniciales.
-2. **Manipulación de Extremos:**
-   - `push()`: Agrega un nuevo ejercicio al final de la colección.
-   - `unshift()`: Agrega un ejercicio de prioridad/calentamiento al inicio.
-   - `pop()`: Elimina el último elemento y lo muestra en consola (`Se ha eliminado el elemento: [nombre]`).
-3. **Búsqueda y Validación:**
-   - `includes()`: Verifica la existencia de un ejercicio solicitado por `prompt`.
-   - `indexOf()`: Retorna el índice/posición exacta del elemento buscado.
-4. **Actualización por Índice:**
-   - `splice()`: Reemplaza un elemento concreto en una posición del array sin alterar el resto.
-5. **Recorrido Iterativo:**
-   - Bucle `for...of` dentro de la función `listarCatalogoEjercicios(lista)` para imprimir el catálogo formateado.
+1. **Clase Principal (`EjercicioGym`):**
+   - Sirve como "molde" o fábrica para cada actividad registrada en el simulador.
+2. **Propiedades Inicializadas (con `this`):**
+   - `nombre` (String), `series` (Number), `repsPorSerie` (Number), `pesoCargado` (Number), `volumenTotal` (Number), `enfoque` (String).
+3. **Métodos de Instancia:**
+   - `calcularVolumen()`: Modifica la propiedad `volumenTotal` multiplicando series, reps y peso.
+   - `determinarEnfoque()`: Modifica la propiedad `enfoque` evaluando la cantidad de repeticiones ingresadas.
+   - `aumentarPeso(kgExtra)`: Método que actualiza una propiedad del objeto y gatilla un recálculo interno.
+4. **Instanciación:**
+   - Se crearon múltiples instancias usando `new EjercicioGym(...)` tanto de forma estática (para validación por consola) como de forma dinámica dentro del bucle interactivo de la app.
 
 ## 🚀 Pasos para Probar el Proyecto
 
-1. Abrí `index.html` en tu navegador web o mediante la extensión **Live Server** en VS Code.
-2. Completá los datos del perfil de usuario.
-3. Observá las operaciones automáticas sobre el catálogo en la consola y realizá una búsqueda interactiva por cuadro de diálogo.
-4. Cargá los ejercicios realizados durante la sesión (escribí `ESC` para finalizar).
-5. Presioná **F12** para verificar los registros en la consola del navegador.
+1. Abrí `index.html` en tu navegador web.
+2. Presioná **F12** y abrí la pestaña **Consola** para visualizar cómo se instancian los 3 objetos de prueba requeridos por la consigna.
+3. Completá tu nombre y días de entrenamiento en las ventanas emergentes.
+4. Ingresá ejercicios reales en el bucle interactivo. Cada ejercicio se instanciará como un nuevo **Objeto** y se guardará en un Array de la sesión.
+5. Escribí `ESC` para finalizar la carga y ver el recorrido final de todos los objetos en la consola.

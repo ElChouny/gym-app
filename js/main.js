@@ -1,200 +1,147 @@
 // ==========================================
 // FitTracker - App de Seguimiento de Entrenamiento
-// Evolución Acumulada: Pre-Entrega 1 + 2 + 3 + 4 (Arrays)
+// Evolución Acumulada: Pre-Entregas 1 a 4 + Pre-Entrega 5 (Clases y Objetos)
 // ==========================================
 
 // ------------------------------------------
-// LO NUEVO (Pre-Entrega 4): ARRAYS Y GESTIÓN DE CATÁLOGO
+// PRE-ENTREGA 5: MODELADO DE LA ENTIDAD CON CLASS
 // ------------------------------------------
 
-// 1. Creación e inicialización del Array con nombre semántico (mínimo 5 elementos)
-const catalogoEjercicios = [
-    "Sentadilla con Barra",
-    "Press de Banco Plano",
-    "Peso Muerto Rumano",
-    "Press Militar con Barra",
-    "Dominadas con Lastre"
-];
-
-// 2. Función con bucle for...of para listar elementos (Recorrido e Iteración Eficiente)
-function listarCatalogoEjercicios(lista) {
-    console.log("--- 📋 CATÁLOGO ACTUAL DE EJERCICIOS DISPONIBLES ---");
-    for (const ejercicio of lista) {
-        console.log(`🏋️ Ejercicio: ${ejercicio}`);
+// 1. Definición de la Clase (PascalCase) con al menos 4 propiedades
+class EjercicioGym {
+    constructor(nombre, series, repsPorSerie, pesoCargado) {
+        this.nombre = nombre;
+        this.series = series;
+        this.repsPorSerie = repsPorSerie;
+        this.pesoCargado = pesoCargado; // nueva variable para hacer más completo el objeto
+        this.volumenTotal = 0;
+        this.enfoque = "";
     }
-    console.log(`Total en catálogo: ${lista.length} ejercicios.`);
-    console.log("---------------------------------------------------");
-}
 
+    // 2. Método 1: Calcula un valor en base a las propiedades del objeto usando 'this'
+    calcularVolumen() {
+        // Fórmula de volumen de entrenamiento: Series x Repeticiones x Peso
+        this.volumenTotal = this.series * this.repsPorSerie * this.pesoCargado;
+    }
 
-// ------------------------------------------
-// PRE-ENTREGA 3: DECLARACIÓN DE FUNCIONES REUTILIZABLES
-// ------------------------------------------
+    // 3. Método 2: Modifica el estado del objeto evaluando una condición
+    determinarEnfoque() {
+        if (this.repsPorSerie < 6) {
+            this.enfoque = "Fuerza Máxima 💥";
+        } else if (this.repsPorSerie <= 12) {
+            this.enfoque = "Hipertrofia 💪";
+        } else {
+            this.enfoque = "Resistencia 🏃‍♂️";
+        }
+    }
 
-// Función Flecha: Valida que los números ingresados sean válidos y mayores a cero
-const esNumeroValido = (numero) => !isNaN(numero) && numero > 0;
-
-// Función Flecha: Calcula el volumen total por ejercicio (Series × Reps)
-const calcularVolumenEjercicio = (series, repsPorSerie) => series * repsPorSerie;
-
-// Función Declarada: Clasifica el enfoque de entrenamiento según el rango de repeticiones
-function evaluarEnfoque(repsPorSerie) {
-    if (repsPorSerie < 6) {
-        return "Rango de Fuerza Máxima 💥";
-    } else if (repsPorSerie <= 12) {
-        return "Rango Ideal de Hipertrofia 💪";
-    } else {
-        return "Rango de Resistencia Muscular 🏃‍♂️";
+    // 4. Método 3: Modifica directamente una propiedad ingresando un valor nuevo
+    aumentarPeso(kgExtra) {
+        this.pesoCargado += kgExtra;
+        this.calcularVolumen(); // Recalculamos el volumen al cambiar el peso
+        console.log(`⬆️ Se aumentó el peso de "${this.nombre}" a ${this.pesoCargado}kg.`);
     }
 }
 
-// Función Declarada (Flujo Encadenado): Une los datos usando las funciones anteriores
-function procesarEjercicio(nombre, series, repsPorSerie) {
-    const volumenTotal = calcularVolumenEjercicio(series, repsPorSerie);
-    const enfoque = evaluarEnfoque(repsPorSerie);
+// ------------------------------------------
+// INSTANCIACIÓN Y VERIFICACIÓN (Requisito Pre-Entrega 5)
+// ------------------------------------------
+console.log("--- 🏗️ PRUEBA DE INSTANCIACIÓN DE OBJETOS ---");
 
-    return {
-        nombre: nombre,
-        series: series,
-        repsPorSerie: repsPorSerie,
-        volumenTotal: volumenTotal,
-        enfoque: enfoque
-    };
-}
+// Creación de al menos 3 instancias usando 'new' guardadas en constantes
+const ejercicioPrueba1 = new EjercicioGym("Press de Banca Plano", 4, 10, 80);
+const ejercicioPrueba2 = new EjercicioGym("Sentadilla Libre", 4, 8, 100);
+const ejercicioPrueba3 = new EjercicioGym("Peso Muerto Rumano", 3, 5, 120);
 
-// Función Declarada: Muestra la salida en consola y alertas
-function mostrarSalidaEjercicio(ejercicio, numeroEjercicio) {
-    console.log(`✅ Ejercicio #${numeroEjercicio}: ${ejercicio.nombre}`);
-    console.log(`   - Detalle: ${ejercicio.series} series × ${ejercicio.repsPorSerie} reps/serie = ${ejercicio.volumenTotal} reps totales`);
-    console.log(`   - Enfoque: ${ejercicio.enfoque}`);
+// Ejecución de los métodos para poblar los datos calculados
+ejercicioPrueba1.calcularVolumen();
+ejercicioPrueba1.determinarEnfoque();
 
-    alert(`Registrado: ${ejercicio.nombre}\n- ${ejercicio.series} series de ${ejercicio.repsPorSerie} reps (${ejercicio.volumenTotal} reps totales)\n- Enfoque: ${ejercicio.enfoque}`);
-}
+ejercicioPrueba2.calcularVolumen();
+ejercicioPrueba2.determinarEnfoque();
+
+ejercicioPrueba3.calcularVolumen();
+ejercicioPrueba3.determinarEnfoque();
+
+// Verificación en consola mostrando los objetos completos
+console.log("Objeto 1 (Estado inicial):", ejercicioPrueba1);
+console.log("Objeto 2 (Estado inicial):", ejercicioPrueba2);
+console.log("Objeto 3 (Estado inicial):", ejercicioPrueba3);
+
+// Probamos el método que modifica propiedades de un objeto existente
+ejercicioPrueba2.aumentarPeso(10);
+console.log("Objeto 2 (Estado Modificado tras aumentar peso):", ejercicioPrueba2);
+console.log("----------------------------------------------");
 
 
 // ------------------------------------------
-// PARTE 1 (Pre-Entrega 1): Configuración del Perfil de Atleta
+// MANTENIMIENTO DEL PROYECTO ANTERIOR (Arrays y Perfil)
 // ------------------------------------------
-alert("¡Bienvenido a FitTracker! Vamos a configurar tu perfil y gestionar el catálogo de entrenamiento. 🏋️‍♂️");
+const catalogoEjercicios = ["Sentadilla", "Press de Banca", "Peso Muerto", "Dominadas", "Remo con Barra"];
+catalogoEjercicios.push("Curl de Bíceps");
+catalogoEjercicios.unshift("Movilidad Articular");
+
+alert("¡Bienvenido a FitTracker! Vamos a configurar tu perfil de atleta. 🏋️‍♂️");
 
 const nombreUsuario = prompt("¿Cómo te llamás?");
-const pesoActual = parseFloat(prompt("Ingresá tu peso actual en kg (ej: 75.5):"));
-const pesoObjetivo = parseFloat(prompt("Ingresá tu peso objetivo en kg (ej: 80.0):"));
 const diasEntrenamiento = parseInt(prompt("¿Cuántos días a la semana querés entrenar? (1 a 7):"));
-
-const diferenciaPeso = pesoObjetivo - pesoActual;
-const minutosSemanalesEstimados = diasEntrenamiento * 60;
-
-let mensajeMeta = "";
-if (diferenciaPeso > 0) {
-    mensajeMeta = `Tu objetivo es ganar ${diferenciaPeso.toFixed(1)} kg de masa muscular.`;
-} else if (diferenciaPeso < 0) {
-    mensajeMeta = `Tu objetivo es bajar ${Math.abs(diferenciaPeso).toFixed(1)} kg de peso.`;
-} else {
-    mensajeMeta = "Tu objetivo es mantener tu peso actual y ganar fuerza.";
-}
-
-console.log("=== PERFIL DE ATLETA CREADO ===");
-console.log(`Nombre: ${nombreUsuario}`);
-console.log(`Peso Actual: ${pesoActual} kg | Peso Objetivo: ${pesoObjetivo} kg`);
-console.log(`Días semanales: ${diasEntrenamiento} (~${minutosSemanalesEstimados} min)`);
-console.log(`Objetivo: ${mensajeMeta}`);
-
-alert(`¡Perfil cargado, ${nombreUsuario}!\n- ${mensajeMeta}\n- Proyección semanal: ${minutosSemanalesEstimados} minutos.`);
-
+console.log(`Atleta: ${nombreUsuario} | Días de entrenamiento: ${diasEntrenamiento}`);
 
 // ------------------------------------------
-// PARTE 2 (Pre-Entrega 4): Operaciones y Manipulación con Arrays
+// BUCLE INTERACTIVO: Integración de Clases en el Simulador
 // ------------------------------------------
-alert("⚙️ Actualizando el Catálogo Oficial de Ejercicios del Gimnasio...");
+alert("¡Registremos los ejercicios de tu sesión de hoy creando objetos en vivo! 📝");
 
-// A) Manipulación de extremos: push (agrega al final) y unshift (agrega al inicio)
-catalogoEjercicios.push("Curl de Bíceps con Barra");
-catalogoEjercicios.unshift("Movilidad Articular y Calentamiento");
-
-// B) Manipulación de extremos: pop (elimina el último y lo guarda)
-const elementoEliminado = catalogoEjercicios.pop();
-console.log(`Se ha eliminado el elemento: ${elementoEliminado}`);
-
-// C) Actualización por índice usando splice (reemplaza el elemento del índice 2)
-catalogoEjercicios.splice(2, 1, "Peso Muerto Convencional");
-
-// D) Reporte iterativo del catálogo con for...of mediante función
-listarCatalogoEjercicios(catalogoEjercicios);
-
-// E) Búsqueda y Validación con prompt, includes e indexOf
-const ejercicioBuscado = prompt("🔍 ¿Qué ejercicio querés buscar en el catálogo oficial?");
-if (ejercicioBuscado) {
-    if (catalogoEjercicios.includes(ejercicioBuscado)) {
-        const posicion = catalogoEjercicios.indexOf(ejercicioBuscado);
-        console.log(`✅ "${ejercicioBuscado}" está disponible en el catálogo, en la posición ${posicion}.`);
-        alert(`✅ Encontrado: "${ejercicioBuscado}" está en la posición ${posicion} del catálogo.`);
-    } else {
-        console.log(`❌ "${ejercicioBuscado}" no se encuentra en el catálogo actual.`);
-        alert(`❌ "${ejercicioBuscado}" no figura en el catálogo actual.`);
-    }
-}
-
-
-// ------------------------------------------
-// PARTE 3 (Pre-Entrega 2 + 3): Registro de Sesión con Bucles y Funciones
-// ------------------------------------------
-alert("¡Ahora vamos a registrar los ejercicios trabajados en la sesión de hoy! 📝");
-
-let totalEjercicios = 0;
-let totalSeriesGlobal = 0;
-let totalRepeticionesGlobal = 0;
+const sesionActual = []; // Array vacío para guardar los OBJETOS generados
 let continuar = true;
 
 while (continuar) {
-    let nombreEjercicio = prompt(
-        "Ingresá el nombre del ejercicio realizado (o escribí 'ESC' para terminar la sesión):"
-    );
+    let nombreEj = prompt("Ingresá el nombre del ejercicio realizado (o escribí 'ESC' para terminar):");
 
-    if (nombreEjercicio === null || nombreEjercicio.trim().toUpperCase() === "ESC") {
+    if (nombreEj === null || nombreEj.trim().toUpperCase() === "ESC") {
         continuar = false;
-        console.log("🛑 Finalizando el registro de la sesión de entrenamiento...");
-    } else if (nombreEjercicio.trim() === "") {
-        alert("⚠️ El nombre del ejercicio no puede estar vacío.");
+        console.log("🛑 Finalizando registro...");
+    } else if (nombreEj.trim() === "") {
+        alert("⚠️ El nombre no puede estar vacío.");
     } else {
-        let series = parseInt(prompt(`¿Cuántas series hiciste de ${nombreEjercicio}? (ej: 4)`));
-        let repsPorSerie = parseInt(prompt(`¿Cuántas repeticiones por serie hiciste en ${nombreEjercicio}? (ej: 10)`));
+        let seriesEj = parseInt(prompt(`¿Cuántas series hiciste de ${nombreEj}?`));
+        let repsEj = parseInt(prompt(`¿Cuántas repeticiones por serie hiciste?`));
+        let pesoEj = parseFloat(prompt(`¿Con cuántos kilos (kg) trabajaste?`));
 
-        // Invocación a la función de validación
-        if (!esNumeroValido(series) || !esNumeroValido(repsPorSerie)) {
-            alert("⚠️ Por favor, ingresá números válidos y mayores a 0 para series y repeticiones.");
-            console.log(`❌ Intento fallido al registrar "${nombreEjercicio}": datos inválidos.`);
+        if (isNaN(seriesEj) || seriesEj <= 0 || isNaN(repsEj) || repsEj <= 0 || isNaN(pesoEj) || pesoEj < 0) {
+            alert("⚠️ Ingresá valores numéricos válidos mayores a 0.");
         } else {
-            totalEjercicios++;
+            // ¡MAGIA DE OBJETOS!: Instanciamos un objeto nuevo con los datos del usuario
+            const nuevoEjercicio = new EjercicioGym(nombreEj, seriesEj, repsEj, pesoEj);
+            
+            // Usamos los métodos de la clase para autocompletar la info
+            nuevoEjercicio.calcularVolumen();
+            nuevoEjercicio.determinarEnfoque();
 
-            // Invocación a la función encadenada de procesamiento
-            const datosEjercicio = procesarEjercicio(nombreEjercicio, series, repsPorSerie);
+            // Guardamos el objeto en el Array de la sesión
+            sesionActual.push(nuevoEjercicio);
 
-            // Acumuladores globales
-            totalSeriesGlobal += datosEjercicio.series;
-            totalRepeticionesGlobal += datosEjercicio.volumenTotal;
-
-            // Invocación a la función de salida por pantalla/consola
-            mostrarSalidaEjercicio(datosEjercicio, totalEjercicios);
+            alert(`✅ ¡Registrado! ${nuevoEjercicio.nombre}\n- Enfoque: ${nuevoEjercicio.enfoque}\n- Volumen total movido: ${nuevoEjercicio.volumenTotal} kg.`);
         }
     }
 }
 
 // ------------------------------------------
-// RESUMEN GLOBAL FINAL DE LA SESIÓN
+// REPORTE FINAL RECORRIENDO EL ARRAY DE OBJETOS (For...of)
 // ------------------------------------------
 console.log("==========================================");
-console.log("=== RESUMEN GLOBAL DE LA SESIÓN ===");
-console.log(`Atleta: ${nombreUsuario}`);
-console.log(`Ejercicios distintos realizados: ${totalEjercicios}`);
-console.log(`Total de series realizadas: ${totalSeriesGlobal}`);
-console.log(`Volumen total de repeticiones: ${totalRepeticionesGlobal}`);
+console.log(`=== RESUMEN DE LA SESIÓN DE ${nombreUsuario.toUpperCase()} ===`);
 
-if (totalEjercicios > 0) {
-    const promedioRepsPorEjercicio = (totalRepeticionesGlobal / totalEjercicios).toFixed(1);
-    console.log(`Promedio de repeticiones por ejercicio: ${promedioRepsPorEjercicio}`);
-    alert(`¡Sesión finalizada con éxito, ${nombreUsuario}! 🎉\n- Ejercicios: ${totalEjercicios}\n- Series totales: ${totalSeriesGlobal}\n- Repeticiones totales: ${totalRepeticionesGlobal}`);
+if (sesionActual.length > 0) {
+    let volumenTotalSesion = 0;
+
+    for (const item of sesionActual) {
+        console.log(`👉 ${item.nombre}: ${item.series}x${item.repsPorSerie} con ${item.pesoCargado}kg | Total: ${item.volumenTotal}kg movidos (${item.enfoque})`);
+        volumenTotalSesion += item.volumenTotal;
+    }
+
+    console.log(`🏆 VOLUMEN TOTAL MOVIDO EN LA SESIÓN: ${volumenTotalSesion} kg.`);
+    alert(`¡Sesión terminada!\nHiciste ${sesionActual.length} ejercicios.\nMoviste un total de ${volumenTotalSesion} kg hoy. ¡Felicidades!`);
 } else {
-    console.log("No se registraron ejercicios en esta sesión.");
-    alert("Sesión finalizada sin ejercicios registrados.");
+    console.log("No se registraron ejercicios.");
 }
