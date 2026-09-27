@@ -1,19 +1,43 @@
 // ==========================================
 // FitTracker - App de Seguimiento de Entrenamiento
-// Evolución Acumulada: Pre-Entrega 1 + 2 + 3 (Funciones)
+// Evolución Acumulada: Pre-Entrega 1 + 2 + 3 + 4 (Arrays)
 // ==========================================
 
 // ------------------------------------------
-// LO NUEVO (Pre-Entrega 3): DECLARACIÓN DE FUNCIONES REUTILIZABLES
+// LO NUEVO (Pre-Entrega 4): ARRAYS Y GESTIÓN DE CATÁLOGO
 // ------------------------------------------
 
-// 1. FUNCIÓN FLECHA: Valida que los números ingresados sean válidos y mayores a cero
+// 1. Creación e inicialización del Array con nombre semántico (mínimo 5 elementos)
+const catalogoEjercicios = [
+    "Sentadilla con Barra",
+    "Press de Banco Plano",
+    "Peso Muerto Rumano",
+    "Press Militar con Barra",
+    "Dominadas con Lastre"
+];
+
+// 2. Función con bucle for...of para listar elementos (Recorrido e Iteración Eficiente)
+function listarCatalogoEjercicios(lista) {
+    console.log("--- 📋 CATÁLOGO ACTUAL DE EJERCICIOS DISPONIBLES ---");
+    for (const ejercicio of lista) {
+        console.log(`🏋️ Ejercicio: ${ejercicio}`);
+    }
+    console.log(`Total en catálogo: ${lista.length} ejercicios.`);
+    console.log("---------------------------------------------------");
+}
+
+
+// ------------------------------------------
+// PRE-ENTREGA 3: DECLARACIÓN DE FUNCIONES REUTILIZABLES
+// ------------------------------------------
+
+// Función Flecha: Valida que los números ingresados sean válidos y mayores a cero
 const esNumeroValido = (numero) => !isNaN(numero) && numero > 0;
 
-// 2. FUNCIÓN FLECHA: Calcula el volumen total por ejercicio (Series × Reps)
+// Función Flecha: Calcula el volumen total por ejercicio (Series × Reps)
 const calcularVolumenEjercicio = (series, repsPorSerie) => series * repsPorSerie;
 
-// 3. FUNCIÓN DECLARADA: Clasifica el enfoque de entrenamiento según el rango de repeticiones
+// Función Declarada: Clasifica el enfoque de entrenamiento según el rango de repeticiones
 function evaluarEnfoque(repsPorSerie) {
     if (repsPorSerie < 6) {
         return "Rango de Fuerza Máxima 💥";
@@ -24,7 +48,7 @@ function evaluarEnfoque(repsPorSerie) {
     }
 }
 
-// 4. FUNCIÓN DECLARADA (Flujo Encadenado): Une los datos usando las funciones anteriores
+// Función Declarada (Flujo Encadenado): Une los datos usando las funciones anteriores
 function procesarEjercicio(nombre, series, repsPorSerie) {
     const volumenTotal = calcularVolumenEjercicio(series, repsPorSerie);
     const enfoque = evaluarEnfoque(repsPorSerie);
@@ -38,7 +62,7 @@ function procesarEjercicio(nombre, series, repsPorSerie) {
     };
 }
 
-// 5. FUNCIÓN DECLARADA: Muestra la salida en consola y alertas
+// Función Declarada: Muestra la salida en consola y alertas
 function mostrarSalidaEjercicio(ejercicio, numeroEjercicio) {
     console.log(`✅ Ejercicio #${numeroEjercicio}: ${ejercicio.nombre}`);
     console.log(`   - Detalle: ${ejercicio.series} series × ${ejercicio.repsPorSerie} reps/serie = ${ejercicio.volumenTotal} reps totales`);
@@ -51,7 +75,7 @@ function mostrarSalidaEjercicio(ejercicio, numeroEjercicio) {
 // ------------------------------------------
 // PARTE 1 (Pre-Entrega 1): Configuración del Perfil de Atleta
 // ------------------------------------------
-alert("¡Bienvenido a FitTracker! Vamos a configurar tu perfil y registrar tu entrenamiento de hoy. 🏋️‍♂️");
+alert("¡Bienvenido a FitTracker! Vamos a configurar tu perfil y gestionar el catálogo de entrenamiento. 🏋️‍♂️");
 
 const nombreUsuario = prompt("¿Cómo te llamás?");
 const pesoActual = parseFloat(prompt("Ingresá tu peso actual en kg (ej: 75.5):"));
@@ -80,9 +104,42 @@ alert(`¡Perfil cargado, ${nombreUsuario}!\n- ${mensajeMeta}\n- Proyección sema
 
 
 // ------------------------------------------
-// PARTE 2 Y 3 (Pre-Entrega 2 + 3): Bucle Interactivo invocando las Funciones
+// PARTE 2 (Pre-Entrega 4): Operaciones y Manipulación con Arrays
 // ------------------------------------------
-alert("¡Ahora vamos a registrar la sesión de hoy usando nuestras funciones! 📝");
+alert("⚙️ Actualizando el Catálogo Oficial de Ejercicios del Gimnasio...");
+
+// A) Manipulación de extremos: push (agrega al final) y unshift (agrega al inicio)
+catalogoEjercicios.push("Curl de Bíceps con Barra");
+catalogoEjercicios.unshift("Movilidad Articular y Calentamiento");
+
+// B) Manipulación de extremos: pop (elimina el último y lo guarda)
+const elementoEliminado = catalogoEjercicios.pop();
+console.log(`Se ha eliminado el elemento: ${elementoEliminado}`);
+
+// C) Actualización por índice usando splice (reemplaza el elemento del índice 2)
+catalogoEjercicios.splice(2, 1, "Peso Muerto Convencional");
+
+// D) Reporte iterativo del catálogo con for...of mediante función
+listarCatalogoEjercicios(catalogoEjercicios);
+
+// E) Búsqueda y Validación con prompt, includes e indexOf
+const ejercicioBuscado = prompt("🔍 ¿Qué ejercicio querés buscar en el catálogo oficial?");
+if (ejercicioBuscado) {
+    if (catalogoEjercicios.includes(ejercicioBuscado)) {
+        const posicion = catalogoEjercicios.indexOf(ejercicioBuscado);
+        console.log(`✅ "${ejercicioBuscado}" está disponible en el catálogo, en la posición ${posicion}.`);
+        alert(`✅ Encontrado: "${ejercicioBuscado}" está en la posición ${posicion} del catálogo.`);
+    } else {
+        console.log(`❌ "${ejercicioBuscado}" no se encuentra en el catálogo actual.`);
+        alert(`❌ "${ejercicioBuscado}" no figura en el catálogo actual.`);
+    }
+}
+
+
+// ------------------------------------------
+// PARTE 3 (Pre-Entrega 2 + 3): Registro de Sesión con Bucles y Funciones
+// ------------------------------------------
+alert("¡Ahora vamos a registrar los ejercicios trabajados en la sesión de hoy! 📝");
 
 let totalEjercicios = 0;
 let totalSeriesGlobal = 0;
@@ -91,7 +148,7 @@ let continuar = true;
 
 while (continuar) {
     let nombreEjercicio = prompt(
-        "Ingresá el nombre del ejercicio (o escribí 'ESC' para terminar la sesión):"
+        "Ingresá el nombre del ejercicio realizado (o escribí 'ESC' para terminar la sesión):"
     );
 
     if (nombreEjercicio === null || nombreEjercicio.trim().toUpperCase() === "ESC") {
@@ -129,7 +186,7 @@ while (continuar) {
 console.log("==========================================");
 console.log("=== RESUMEN GLOBAL DE LA SESIÓN ===");
 console.log(`Atleta: ${nombreUsuario}`);
-console.log(`Ejercicios distintos: ${totalEjercicios}`);
+console.log(`Ejercicios distintos realizados: ${totalEjercicios}`);
 console.log(`Total de series realizadas: ${totalSeriesGlobal}`);
 console.log(`Volumen total de repeticiones: ${totalRepeticionesGlobal}`);
 

@@ -1,143 +1,33 @@
-// ==========================================
-// FitTracker - App de Seguimiento de Entrenamiento
-// Evolución Acumulada: Pre-Entrega 1 + 2 + 3 (Funciones)
-// ==========================================
+# FitTracker - App de Seguimiento de Entrenamiento 🏋️‍♂️
 
-// ------------------------------------------
-// LO NUEVO (Pre-Entrega 3): DECLARACIÓN DE FUNCIONES REUTILIZABLES
-// ------------------------------------------
+FitTracker es un simulador interactivo para el registro y análisis de rutinas de gimnasio, desarrollado de forma evolutiva en JavaScript.
 
-// 1. FUNCIÓN FLECHA: Valida que los números ingresados sean válidos y mayores a cero
-const esNumeroValido = (numero) => !isNaN(numero) && numero > 0;
+## 📋 Evolución del Proyecto
 
-// 2. FUNCIÓN FLECHA: Calcula el volumen total por ejercicio (Series × Reps)
-const calcularVolumenEjercicio = (series, repsPorSerie) => series * repsPorSerie;
+- **Pre-Entrega 1:** Configuración inicial del perfil del atleta (cálculo de metas de peso y proyección de tiempo semanal).
+- **Pre-Entrega 2:** Control de flujo interactivo mediante bucles (`while`) y condicionales (`if / else`) para el registro continuo de ejercicios.
+- **Pre-Entrega 3:** Modularización con **Funciones Declaradas** y **Funciones Flecha**, paso de parámetros, retornos (`return`) y procesamiento encadenado.
+- **Pre-Entrega 4 (Actual):** Uso e interacción con **Arrays** para administrar el catálogo oficial de ejercicios del gimnasio (métodos de extremos, búsqueda, actualización por índice e iteración).
 
-// 3. FUNCIÓN DECLARADA: Clasifica el enfoque de entrenamiento según el rango de repeticiones
-function evaluarEnfoque(repsPorSerie) {
-    if (repsPorSerie < 6) {
-        return "Rango de Fuerza Máxima 💥";
-    } else if (repsPorSerie <= 12) {
-        return "Rango Ideal de Hipertrofia 💪";
-    } else {
-        return "Rango de Resistencia Muscular 🏃‍♂️";
-    }
-}
+## 🛠️ Métodos y Operaciones con Arrays Implementadas
 
-// 4. FUNCIÓN DECLARADA (Flujo Encadenado): Une los datos usando las funciones anteriores
-function procesarEjercicio(nombre, series, repsPorSerie) {
-    const volumenTotal = calcularVolumenEjercicio(series, repsPorSerie);
-    const enfoque = evaluarEnfoque(repsPorSerie);
+1. **Creación e Inicialización:** Array `catalogoEjercicios` con 5 elementos semánticos iniciales.
+2. **Manipulación de Extremos:**
+   - `push()`: Agrega un nuevo ejercicio al final de la colección.
+   - `unshift()`: Agrega un ejercicio de prioridad/calentamiento al inicio.
+   - `pop()`: Elimina el último elemento y lo muestra en consola (`Se ha eliminado el elemento: [nombre]`).
+3. **Búsqueda y Validación:**
+   - `includes()`: Verifica la existencia de un ejercicio solicitado por `prompt`.
+   - `indexOf()`: Retorna el índice/posición exacta del elemento buscado.
+4. **Actualización por Índice:**
+   - `splice()`: Reemplaza un elemento concreto en una posición del array sin alterar el resto.
+5. **Recorrido Iterativo:**
+   - Bucle `for...of` dentro de la función `listarCatalogoEjercicios(lista)` para imprimir el catálogo formateado.
 
-    return {
-        nombre: nombre,
-        series: series,
-        repsPorSerie: repsPorSerie,
-        volumenTotal: volumenTotal,
-        enfoque: enfoque
-    };
-}
+## 🚀 Pasos para Probar el Proyecto
 
-// 5. FUNCIÓN DECLARADA: Muestra la salida en consola y alertas
-function mostrarSalidaEjercicio(ejercicio, numeroEjercicio) {
-    console.log(`✅ Ejercicio #${numeroEjercicio}: ${ejercicio.nombre}`);
-    console.log(`   - Detalle: ${ejercicio.series} series × ${ejercicio.repsPorSerie} reps/serie = ${ejercicio.volumenTotal} reps totales`);
-    console.log(`   - Enfoque: ${ejercicio.enfoque}`);
-
-    alert(`Registrado: ${ejercicio.nombre}\n- ${ejercicio.series} series de ${ejercicio.repsPorSerie} reps (${ejercicio.volumenTotal} reps totales)\n- Enfoque: ${ejercicio.enfoque}`);
-}
-
-
-// ------------------------------------------
-// PARTE 1 (Pre-Entrega 1): Configuración del Perfil de Atleta
-// ------------------------------------------
-alert("¡Bienvenido a FitTracker! Vamos a configurar tu perfil y registrar tu entrenamiento de hoy. 🏋️‍♂️");
-
-const nombreUsuario = prompt("¿Cómo te llamás?");
-const pesoActual = parseFloat(prompt("Ingresá tu peso actual en kg (ej: 75.5):"));
-const pesoObjetivo = parseFloat(prompt("Ingresá tu peso objetivo en kg (ej: 80.0):"));
-const diasEntrenamiento = parseInt(prompt("¿Cuántos días a la semana querés entrenar? (1 a 7):"));
-
-const diferenciaPeso = pesoObjetivo - pesoActual;
-const minutosSemanalesEstimados = diasEntrenamiento * 60;
-
-let mensajeMeta = "";
-if (diferenciaPeso > 0) {
-    mensajeMeta = `Tu objetivo es ganar ${diferenciaPeso.toFixed(1)} kg de masa muscular.`;
-} else if (diferenciaPeso < 0) {
-    mensajeMeta = `Tu objetivo es bajar ${Math.abs(diferenciaPeso).toFixed(1)} kg de peso.`;
-} else {
-    mensajeMeta = "Tu objetivo es mantener tu peso actual y ganar fuerza.";
-}
-
-console.log("=== PERFIL DE ATLETA CREADO ===");
-console.log(`Nombre: ${nombreUsuario}`);
-console.log(`Peso Actual: ${pesoActual} kg | Peso Objetivo: ${pesoObjetivo} kg`);
-console.log(`Días semanales: ${diasEntrenamiento} (~${minutosSemanalesEstimados} min)`);
-console.log(`Objetivo: ${mensajeMeta}`);
-
-alert(`¡Perfil cargado, ${nombreUsuario}!\n- ${mensajeMeta}\n- Proyección semanal: ${minutosSemanalesEstimados} minutos.`);
-
-
-// ------------------------------------------
-// PARTE 2 Y 3 (Pre-Entrega 2 + 3): Bucle Interactivo invocando las Funciones
-// ------------------------------------------
-alert("¡Ahora vamos a registrar la sesión de hoy usando nuestras funciones! 📝");
-
-let totalEjercicios = 0;
-let totalSeriesGlobal = 0;
-let totalRepeticionesGlobal = 0;
-let continuar = true;
-
-while (continuar) {
-    let nombreEjercicio = prompt(
-        "Ingresá el nombre del ejercicio (o escribí 'ESC' para terminar la sesión):"
-    );
-
-    if (nombreEjercicio === null || nombreEjercicio.trim().toUpperCase() === "ESC") {
-        continuar = false;
-        console.log("🛑 Finalizando el registro de la sesión de entrenamiento...");
-    } else if (nombreEjercicio.trim() === "") {
-        alert("⚠️ El nombre del ejercicio no puede estar vacío.");
-    } else {
-        let series = parseInt(prompt(`¿Cuántas series hiciste de ${nombreEjercicio}? (ej: 4)`));
-        let repsPorSerie = parseInt(prompt(`¿Cuántas repeticiones por serie hiciste en ${nombreEjercicio}? (ej: 10)`));
-
-        // Invocación a la función de validación
-        if (!esNumeroValido(series) || !esNumeroValido(repsPorSerie)) {
-            alert("⚠️ Por favor, ingresá números válidos y mayores a 0 para series y repeticiones.");
-            console.log(`❌ Intento fallido al registrar "${nombreEjercicio}": datos inválidos.`);
-        } else {
-            totalEjercicios++;
-
-            // Invocación a la función encadenada de procesamiento
-            const datosEjercicio = procesarEjercicio(nombreEjercicio, series, repsPorSerie);
-
-            // Acumuladores globales
-            totalSeriesGlobal += datosEjercicio.series;
-            totalRepeticionesGlobal += datosEjercicio.volumenTotal;
-
-            // Invocación a la función de salida por pantalla/consola
-            mostrarSalidaEjercicio(datosEjercicio, totalEjercicios);
-        }
-    }
-}
-
-// ------------------------------------------
-// RESUMEN GLOBAL FINAL DE LA SESIÓN
-// ------------------------------------------
-console.log("==========================================");
-console.log("=== RESUMEN GLOBAL DE LA SESIÓN ===");
-console.log(`Atleta: ${nombreUsuario}`);
-console.log(`Ejercicios distintos: ${totalEjercicios}`);
-console.log(`Total de series realizadas: ${totalSeriesGlobal}`);
-console.log(`Volumen total de repeticiones: ${totalRepeticionesGlobal}`);
-
-if (totalEjercicios > 0) {
-    const promedioRepsPorEjercicio = (totalRepeticionesGlobal / totalEjercicios).toFixed(1);
-    console.log(`Promedio de repeticiones por ejercicio: ${promedioRepsPorEjercicio}`);
-    alert(`¡Sesión finalizada con éxito, ${nombreUsuario}! 🎉\n- Ejercicios: ${totalEjercicios}\n- Series totales: ${totalSeriesGlobal}\n- Repeticiones totales: ${totalRepeticionesGlobal}`);
-} else {
-    console.log("No se registraron ejercicios en esta sesión.");
-    alert("Sesión finalizada sin ejercicios registrados.");
-}
+1. Abrí `index.html` en tu navegador web o mediante la extensión **Live Server** en VS Code.
+2. Completá los datos del perfil de usuario.
+3. Observá las operaciones automáticas sobre el catálogo en la consola y realizá una búsqueda interactiva por cuadro de diálogo.
+4. Cargá los ejercicios realizados durante la sesión (escribí `ESC` para finalizar).
+5. Presioná **F12** para verificar los registros en la consola del navegador.
