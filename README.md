@@ -1,25 +1,22 @@
 # FitTracker - Simulador de Rutinas y Volumen de Entrenamiento
 
 ## Descripción del Proyecto
-FitTracker es una aplicación web interactiva diseñada para gestionar entrenamientos y calcular el volumen de carga (series x repeticiones x peso). Este proyecto es mi entrega para el curso de JavaScript, donde aplico todo lo aprendido sobre manipulación del DOM, eventos, persistencia de datos y operadores modernos.
+FitTracker es una aplicación web interactiva diseñada para gestionar entrenamientos y calcular el volumen de carga (series x repeticiones x peso). Este proyecto es mi entrega para el curso de JavaScript, demostrando una arquitectura de estado moderna, persistencia local y comportamiento asíncrono.
 
-## Características (Pre-entrega 8)
-- **Registro de Perfil:** Permite ingresar nombre, peso actual, peso deseado y días de entrenamiento para calcular el objetivo (subir/bajar de peso).
-- **Catálogo Interactivo:** Búsqueda en tiempo real de ejercicios precargados por nombre o categoría.
-- **Gestión de Sesión:** Permite agregar y eliminar ejercicios a la rutina diaria.
-- **Cálculo Automático:** Calcula el volumen total de la sesión en tiempo real a través de un método de clase.
-- **Persistencia de Datos (LocalStorage):** La aplicación mantiene el estado. Si se recarga la página (F5) o se cierra el navegador, tanto el perfil del usuario como la sesión de ejercicios se recuperan intactos utilizando `JSON.parse` y `JSON.stringify`.
-- **Operadores Modernos y Destructuring:** Optimización del código mediante desestructuración de objetos, operadores ternarios (`? :`) y el operador Nullish Coalescing (`??`) para la inicialización de variables.
+## Características Nuevas (Pre-entrega 9: Asincronismo)
+- **Temporizadores y Notificaciones:** Utilizo `setTimeout()` para generar eventos asíncronos sin bloquear el hilo principal. A los pocos segundos de iniciar sesión, se inyecta dinámicamente un aviso flotante ("Tip del día") que luego desaparece automáticamente.
+- **Manejo de Errores Defensivo:** Implementé un bloque `try-catch-finally` durante la fase crítica de inicialización (cuando recupero y parseo los datos del `localStorage` con `JSON.parse()`). Si la cadena JSON resulta estar corrupta, el simulador captura el error en el `catch`, limpia la base de datos local para evitar el quiebre de la app y registra la auditoría en el `finally`.
 
-## Estructura del Código
-- Utilizo Clases (`class Ejercicio`) con constructores y métodos propios.
-- Genero contenido HTML de forma completamente dinámica mediante JavaScript, inyectando tarjetas de ejercicio en el DOM sin utilizar prompts ni alerts.
-- Sincronizo el estado de mi array en JS con el LocalStorage en cada evento de agregar o eliminar (CRUD básico). Al extraer la información del Storage, vuelvo a instanciar los objetos para preservar los métodos de mi clase.
+## Características Anteriores (Pre-entrega 8)
+- **Registro de Perfil:** Cálculos dinámicos basados en inputs del usuario.
+- **Catálogo Interactivo:** Búsqueda en tiempo real mediante manipulación del array de objetos.
+- **Persistencia de Datos (LocalStorage):** Sincronización continua del estado (sesión y perfil) usando JSON.
+- **Operadores Modernos:** Utilización de Nullish Coalescing (`??`), operadores ternarios y destructuring.
 
-## Tecnologías Utilizadas
-- HTML5
-- CSS3 (Variables, Flexbox, Grid)
-- JavaScript Vanilla (ES6+)
+## Estructura del Repositorio
+- `index.html` (Vista principal)
+- `css/` -> `style.css` (Hoja de estilos)
+- `js/` -> `main.js` (Lógica central del simulador)
 
 ## Autor
 Antonio Tomas Torquatti

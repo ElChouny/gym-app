@@ -1,5 +1,5 @@
 // ==========================================
-// FitTracker - Pre-Entrega 8: Storage, JSON y Operadores Modernos
+// FitTracker - Pre-Entrega 9: Asincronismo y Promesas
 // ==========================================
 
 // --- 1. CLASE Y DATOS BASE ---
@@ -48,28 +48,44 @@ const sesionList = document.getElementById('sesion-list');
 const spanVolumenTotal = document.getElementById('volumen-total');
 
 
-// --- 3. INICIALIZACIÓN (Persistencia y recuperación del estado) ---
+// --- 3. INICIALIZACIÓN Y MANEJO DE ERRORES (try-catch-finally) ---
 document.addEventListener('DOMContentLoaded', () => {
-    // Uso de Nullish Coalescing (??) para asignar null si no hay datos
-    const perfilGuardado = JSON.parse(localStorage.getItem('fitTracker_perfil')) ?? null;
+    let perfilGuardado = null;
+    let sesionGuardada = [];
+
+    // Utilizo try-catch para evitar que un JSON corrupto rompa mi simulador
+    try {
+        const storagePerfil = localStorage.getItem('fitTracker_perfil');
+        if (storagePerfil) {
+            perfilGuardado = JSON.parse(storagePerfil);
+        }
+
+        const storageSesion = localStorage.getItem('fitTracker_sesion');
+        if (storageSesion) {
+            sesionGuardada = JSON.parse(storageSesion);
+        }
+    } catch (error) {
+        console.error("⚠️ Error al leer los datos guardados en LocalStorage. Reiniciando estado.", error);
+        // Si hay error (ej. modificaron el JSON a mano en el navegador), limpio el storage por seguridad
+        localStorage.removeItem('fitTracker_perfil');
+        localStorage.removeItem('fitTracker_sesion');
+    } finally {
+        // Este bloque se ejecuta siempre, indicando que la fase de carga finalizó
+        console.log("✔️ Intento de carga de datos inicializado (Bloque finally ejecutado).");
+    }
     
+    // Si la lectura fue exitosa, procedo a inicializar la app
     if (perfilGuardado) {
-        // Uso de DESTRUCTURING para extraer las propiedades del objeto guardado
         const { nombre, pesoActual, pesoDeseado, frecuencia } = perfilGuardado;
         activarSimulador(nombre, pesoActual, pesoDeseado, frecuencia);
     }
 
-    // Uso de Nullish Coalescing (??) para iniciar con array vacío si no hay sesión
-    const sesionGuardada = JSON.parse(localStorage.getItem('fitTracker_sesion')) ?? [];
-    
-    // Re-instancio los objetos para no perder los métodos de la clase
+    // Re-instancio los objetos de la sesión para no perder los métodos de la clase
     sesionDeHoy = sesionGuardada.map(ej => {
-        // DESTRUCTURING del objeto iterado
         const { id, nombre, categoria, series, reps, peso } = ej;
         return new Ejercicio(id, nombre, categoria, series, reps, peso);
     });
     
-    // Operador TERNARIO (?) para calcular el próximo ID a utilizar
     contadorIdSesion = sesionDeHoy.length > 0 
         ? Math.max(...sesionDeHoy.map(ej => ej.id)) + 1 
         : 1;
@@ -82,13 +98,11 @@ document.addEventListener('DOMContentLoaded', () => {
 formPerfil.addEventListener('submit', (evento) => {
     evento.preventDefault(); 
 
-    // Capturo los valores
     const nombre = document.getElementById('input-nombre').value;
     const pesoActual = parseFloat(document.getElementById('input-peso-actual').value);
     const pesoDeseado = parseFloat(document.getElementById('input-peso-deseado').value);
     const frecuencia = parseInt(document.getElementById('input-frecuencia').value);
 
-    // Guardo en LocalStorage
     const perfil = { nombre, pesoActual, pesoDeseado, frecuencia };
     localStorage.setItem('fitTracker_perfil', JSON.stringify(perfil));
 
@@ -97,8 +111,6 @@ formPerfil.addEventListener('submit', (evento) => {
 
 function activarSimulador(nombre, pesoActual, pesoDeseado, frecuencia) {
     let diferenciaPeso = pesoDeseado - pesoActual;
-    
-    // Operador TERNARIO (?) para definir si el objetivo es subir o bajar
     let mensajeObjetivo = diferenciaPeso < 0 ? "bajar" : "subir";
 
     seccionPerfil.classList.add('oculto');
@@ -111,6 +123,9 @@ function activarSimulador(nombre, pesoActual, pesoDeseado, frecuencia) {
     `;
 
     renderizarCatalogo(catalogo);
+    
+    // Llamo a mi temporizador asíncrono
+    mostrarNotificacionAsincrona();
 }
 
 function borrarPerfil() {
@@ -120,17 +135,50 @@ function borrarPerfil() {
 }
 
 
-// --- 5. RENDERIZADO DEL CATÁLOGO Y BÚSQUEDA ---
+// --- 5. ASINCRONISMO (Temporizador con setTimeout) ---
+function mostrarNotificacionAsincrona() {
+    // Genero una espera de 3 segundos antes de mostrar el mensaje
+    setTimeout(() => {
+        // Creo el elemento dinámicamente desde JS
+        const notificacion = document.createElement('div');
+        notificacion.innerHTML = `<p>🔔 <strong>Tip del día:</strong> ¡No olvides mantenerte hidratado durante tu rutina!</p>`;
+        
+        // Le aplico estilos en línea para asegurarme de que se vea por encima de todo
+        notificacion.style.position = 'fixed';
+        notificacion.style.bottom = '20px';
+        notificacion.style.right = '20px';
+        notificacion.style.backgroundColor = '#2c3e50';
+        notificacion.style.color = '#fff';
+        notificacion.style.padding = '15px 20px';
+        notificacion.style.borderRadius = '8px';
+        notificacion.style.boxShadow = '0 4px 8px rgba(0,0,0,0.2)';
+        notificacion.style.zIndex = '9999';
+        notificacion.style.transition = 'opacity 0.5s ease';
+        notificacion.style.opacity = '0';
+        
+        document.body.appendChild(notificacion);
+
+        // Hago que aparezca suavemente
+        setTimeout(() => notificacion.style.opacity = '1', 100);
+
+        // Lo elimino del DOM después de 5 segundos para no molestar al usuario
+        setTimeout(() => {
+            notificacion.style.opacity = '0';
+            setTimeout(() => notificacion.remove(), 500); 
+        }, 5000);
+
+    }, 3000); // 3000ms = 3 segundos de retraso inicial
+}
+
+
+// --- 6. RENDERIZADO DEL CATÁLOGO Y BÚSQUEDA ---
 function renderizarCatalogo(arrayEjercicios) {
     catalogoList.innerHTML = ''; 
 
-    // Operador TERNARIO para manejar el renderizado vacío vs con datos
     arrayEjercicios.length === 0 
         ? catalogoList.innerHTML = '<p class="text-muted">No se encontraron ejercicios.</p>'
         : arrayEjercicios.forEach(ej => {
-            // DESTRUCTURING para no tener que escribir ej.nombre y ej.categoria
             const { nombre, categoria } = ej;
-            
             const divItem = document.createElement('div');
             divItem.className = 'item';
             divItem.innerHTML = `
@@ -150,17 +198,15 @@ function copiarAlFormulario(nombreEj) {
 
 buscadorEjercicios.addEventListener('keyup', (evento) => {
     const textoBusqueda = evento.target.value.toLowerCase();
-    
     const filtrados = catalogo.filter(ej => 
         ej.nombre.toLowerCase().includes(textoBusqueda) || 
         ej.categoria.toLowerCase().includes(textoBusqueda)
     );
-    
     renderizarCatalogo(filtrados);
 });
 
 
-// --- 6. EVENTO: AGREGAR EJERCICIO A LA SESIÓN (Actualización de estado) ---
+// --- 7. EVENTO: AGREGAR EJERCICIO Y RENDERIZAR SESIÓN ---
 formEjercicio.addEventListener('submit', (evento) => {
     evento.preventDefault();
 
@@ -169,22 +215,15 @@ formEjercicio.addEventListener('submit', (evento) => {
     const reps = parseInt(document.getElementById('ej-reps').value);
     const peso = parseFloat(document.getElementById('ej-peso').value);
 
-    // Agrego al array de datos en JS
     const nuevoEjercicio = new Ejercicio(contadorIdSesion, nombre, "Sesión", series, reps, peso);
     sesionDeHoy.push(nuevoEjercicio);
     contadorIdSesion++;
 
-    // Guardo versión actualizada en localStorage
     localStorage.setItem('fitTracker_sesion', JSON.stringify(sesionDeHoy));
-
     formEjercicio.reset();
-    
-    // Vuelvo a renderizar la vista
     renderizarSesion();
 });
 
-
-// --- 7. RENDERIZADO DE LA SESIÓN ---
 function renderizarSesion() {
     sesionList.innerHTML = '';
 
@@ -197,10 +236,8 @@ function renderizarSesion() {
     let volumenTotal = 0;
 
     sesionDeHoy.forEach(ej => {
-        // DESTRUCTURING
         const { id, nombre, series, reps, peso } = ej;
         const volumen = ej.calcularVolumen(); 
-        
         volumenTotal += volumen;
 
         const divItem = document.createElement('div');
@@ -220,12 +257,7 @@ function renderizarSesion() {
 }
 
 function eliminarDeSesion(idDeseado) {
-    // Actualizo el array (estado)
     sesionDeHoy = sesionDeHoy.filter(ej => ej.id !== idDeseado);
-    
-    // Sincronizo con LocalStorage
     localStorage.setItem('fitTracker_sesion', JSON.stringify(sesionDeHoy));
-    
-    // Renderizo la vista
     renderizarSesion();
 }
