@@ -1,24 +1,66 @@
-# FitTracker - App de Seguimiento de Entrenamiento 🏋️‍♂️
+🏋️ FitTracker - Simulador de Entrenamiento
 
-FitTracker es un simulador interactivo para el registro y análisis de rutinas de gimnasio.
+Este proyecto es un simulador interactivo para la gestión y seguimiento de rutinas de entrenamiento. Está desarrollado con JavaScript Vanilla y estructurado mediante manipulación del DOM y manejo de eventos.
 
-## 📋 Evolución del Proyecto
+📌 Estado del Proyecto
 
-- **Pre-Entrega 1, 2, 3:** Lógica base, perfiles, bucles (`while`), condicionales y modularización con funciones.
-- **Pre-Entrega 4 y 5:** Manejo de Arrays, creación de la `class Ejercicio`, uso de `this` e instanciación de objetos.
-- **Pre-Entrega 6 (Actual):** Implementación de Funciones de Orden Superior (Higher-Order Functions) integradas a un menú interactivo.
+Pre-Entrega 7: Interfaz dinámica con DOM y eventos.
+En esta etapa, el proyecto migró completamente de las alertas y prompts en consola a una interfaz gráfica y dinámica 100% funcional en el navegador.
 
-## 🛠️ Funciones de Orden Superior Implementadas
+🚀 Funcionalidades Principales
 
-1. **Métodos de Búsqueda:**
-   - `.filter()`: Implementado en la Opción 1 del menú para crear un nuevo array filtrando los ejercicios según su grupo muscular (Push / Pull / Legs).
-   - `.find()`: Implementado en la Opción 2 para buscar un objeto específico dentro del catálogo usando su propiedad nombre.
+Gestión de Perfil de Usuario:
 
-2. **Métodos de Transformación:**
-   - `.map()`: Utilizado para extraer únicamente la propiedad `nombre` de los objetos y mostrarlos de forma amigable al usuario en alertas de texto plano.
-   - `.reduce()`: Implementado en la Opción 4 al finalizar la sesión. Itera sobre el array `sesionDeHoy` calculando y sumando el volumen total de entrenamiento (series × reps × peso) de todos los ejercicios registrados.
+Al iniciar, la aplicación solicita los datos básicos (nombre, peso actual, peso deseado y frecuencia de entrenamiento).
 
-## 🚀 Cómo probar el código
-1. Abrí `index.html` en el navegador (el archivo JS está linkeado correctamente con `defer` en el `<head>`).
-2. Interactuá con el menú mediante el `prompt`.
-3. Revisá la consola (`F12`) para ver las impresiones detalladas de los arrays y objetos filtrados/encontrados.
+Calcula automáticamente si el objetivo es de déficit (bajar de peso) o superávit (subir de peso) y genera un mensaje personalizado.
+
+Catálogo Dinámico de Ejercicios:
+
+Muestra una lista de ejercicios predefinidos estructurados bajo el concepto Push/Pull/Legs.
+
+Buscador en tiempo real: Permite filtrar los ejercicios del catálogo por nombre o categoría mediante eventos de teclado (keyup).
+
+Registro de Sesión Diaria:
+
+Un formulario permite registrar los ejercicios realizados en el día ingresando nombre, series, repeticiones y peso.
+
+La lista de la sesión se actualiza visualmente al instante sin recargar la página.
+
+Permite eliminar un ejercicio registrado en caso de error.
+
+Cálculo de Volumen Total:
+
+A medida que se agregan ejercicios, el simulador calcula y actualiza en pantalla el volumen total movido en la sesión (Series × Repeticiones × Peso).
+
+📁 Estructura de Archivos
+
+El proyecto respeta la siguiente estructura de carpetas:
+
+/
+├── index.html       # Estructura principal de la interfaz
+├── css/
+│   └── style.css    # Estilos de la aplicación
+└── js/
+    └── main.js      # Lógica de la aplicación y manipulación del DOM
+
+
+🛠️ Conocimientos Técnicos Aplicados
+
+Sintaxis y Lógica en JS: Variables, condicionales, bucles, funciones.
+
+Programación Orientada a Objetos (POO): Clases y métodos para el modelado de los ejercicios.
+
+Arrays y Funciones de Orden Superior: Uso de métodos como filter(), map(), push(), y forEach() para gestionar las colecciones de datos.
+
+Interacción con HTML (DOM): Uso de getElementById, createElement, innerHTML y manipulación de clases CSS desde JavaScript.
+
+Eventos: Manejo de eventos submit (formularios), click (botones de acción) y keyup (búsqueda dinámica).
+
+💻 Instrucciones de Uso
+
+Clonar o descargar el repositorio.
+
+Abrir el archivo index.html en cualquier navegador web moderno.
+
+Completar el perfil inicial para acceder al simulador de rutinas.

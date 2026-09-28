@@ -1,147 +1,184 @@
 // ==========================================
-// FitTracker - App de Seguimiento de Entrenamiento
-// Pre-Entrega 6: Integración de Perfil + Funciones de Orden Superior
+// FitTracker - Pre-Entrega 7: Interfaz con DOM y Eventos
 // ==========================================
 
-alert("¡Bienvenido a FitTracker! Tu asistente de entrenamiento.");
-
-// --- 1. REGISTRO DE PERFIL (Mantenemos lo de entregas anteriores) ---
-let nombreUsuario = prompt("Ingresá tu nombre:");
-let pesoActual = parseFloat(prompt("Ingresá tu peso actual (kg):"));
-let pesoDeseado = parseFloat(prompt("Ingresá tu peso objetivo (kg):"));
-let frecuencia = parseInt(prompt("¿Cuántos días a la semana pensás entrenar?"));
-
-// Validación: si el usuario cancela o pone letras donde van números, se lo volvemos a pedir
-while (!nombreUsuario || isNaN(pesoActual) || isNaN(pesoDeseado) || isNaN(frecuencia)) {
-    alert("⚠️ Por favor, ingresá datos válidos para armar tu perfil.");
-    nombreUsuario = prompt("Ingresá tu nombre:");
-    pesoActual = parseFloat(prompt("Ingresá tu peso actual (kg):"));
-    pesoDeseado = parseFloat(prompt("Ingresá tu peso objetivo (kg):"));
-    frecuencia = parseInt(prompt("¿Cuántos días a la semana pensás entrenar?"));
-}
-
-let diferenciaPeso = pesoDeseado - pesoActual;
-let mensajeObjetivo = diferenciaPeso < 0 ? "bajar" : "subir";
-
-// Saludamos al usuario con la info que calculamos
-alert(`¡Hola ${nombreUsuario}!\nTu objetivo es ${mensajeObjetivo} ${Math.abs(diferenciaPeso)} kg entrenando ${frecuencia} días a la semana. ¡Vamos con todo!`);
-
-
-// --- 2. CLASE Y ARRAY DE OBJETOS (Pre-entregas 4, 5 y 6) ---
+// --- 1. CLASE Y DATOS BASE (Mantenemos la lógica intacta) ---
 class Ejercicio {
-    constructor(nombre, categoria, dificultad, series = 0, reps = 0, peso = 0) {
+    constructor(id, nombre, categoria, series = 0, reps = 0, peso = 0) {
+        this.id = id;
         this.nombre = nombre;
         this.categoria = categoria; 
-        this.dificultad = dificultad;
         this.series = series;
         this.reps = reps;
         this.peso = peso;
     }
 
-    // Método para calcular el volumen
     calcularVolumen() {
         return this.series * this.reps * this.peso;
     }
 }
 
-// Catálogo base con la clase instanciada
+// Catálogo predefinido
 const catalogo = [
-    new Ejercicio("Press de Banca", "Push", "Media"),
-    new Ejercicio("Flexiones", "Push", "Baja"),
-    new Ejercicio("Dominadas", "Pull", "Alta"),
-    new Ejercicio("Remo con Barra", "Pull", "Media"),
-    new Ejercicio("Sentadilla Libre", "Legs", "Alta"),
-    new Ejercicio("Prensa", "Legs", "Media"),
-    new Ejercicio("Curl de Biceps", "Pull", "Baja"),
-    new Ejercicio("Vuelos Laterales", "Push", "Baja")
+    new Ejercicio(1, "Press de Banca", "Push"),
+    new Ejercicio(2, "Flexiones", "Push"),
+    new Ejercicio(3, "Dominadas", "Pull"),
+    new Ejercicio(4, "Remo con Barra", "Pull"),
+    new Ejercicio(5, "Sentadilla Libre", "Legs"),
+    new Ejercicio(6, "Prensa", "Legs"),
+    new Ejercicio(7, "Curl de Biceps", "Pull"),
+    new Ejercicio(8, "Vuelos Laterales", "Push")
 ];
 
-const sesionDeHoy = [];
+// Array para guardar los ejercicios de hoy
+let sesionDeHoy = [];
+let contadorIdSesion = 1;
 
-// --- 3. MENÚ INTERACTIVO CON FUNCIONES DE ORDEN SUPERIOR ---
-let continuar = true;
 
-while (continuar) {
-    // Usamos el nombre registrado para personalizar el menú
-    let opcion = prompt(
-        `🏋️ MENÚ DE ${nombreUsuario.toUpperCase()} 🏋️\n\n` +
-        "1. Filtrar ejercicios por grupo muscular (Push/Pull/Legs)\n" +
-        "2. Buscar información de un ejercicio puntual\n" +
-        "3. Registrar un ejercicio realizado hoy\n" +
-        "4. Finalizar sesión y ver resumen\n\n" +
-        "Escribí el número de la opción:"
-    );
+// --- 2. SELECCIÓN DE ELEMENTOS DEL DOM ---
+const seccionPerfil = document.getElementById('seccion-perfil');
+const seccionApp = document.getElementById('seccion-app');
+const formPerfil = document.getElementById('form-perfil');
+const saludoUsuario = document.getElementById('saludo-usuario');
 
-    switch (opcion) {
-        case "1":
-            // .filter() y .map()
-            let catBuscada = prompt("¿Qué rutina toca? Escribí 'Push', 'Pull' o 'Legs':").toLowerCase();
-            const filtrados = catalogo.filter((ej) => ej.categoria.toLowerCase() === catBuscada);
-            
-            if (filtrados.length > 0) {
-                let nombresFiltrados = filtrados.map((ej) => ej.nombre).join(" - ");
-                alert(`Ejercicios de ${catBuscada.toUpperCase()} disponibles:\n${nombresFiltrados}`);
-                console.log(`Filtro (${catBuscada}):`, filtrados);
-            } else {
-                alert("Categoría no encontrada. Recordá escribir Push, Pull o Legs.");
-            }
-            break;
+const catalogoList = document.getElementById('catalogo-list');
+const buscadorEjercicios = document.getElementById('buscador-ejercicios');
 
-        case "2":
-            // .find()
-            let nombreBuscado = prompt("¿Qué ejercicio buscás? (Ej: Dominadas, Prensa...):").toLowerCase();
-            const encontrado = catalogo.find((ej) => ej.nombre.toLowerCase() === nombreBuscado);
-            
-            if (encontrado) {
-                alert(`¡Encontrado!\nNombre: ${encontrado.nombre}\nCategoría: ${encontrado.categoria}\nDificultad: ${encontrado.dificultad}`);
-                console.log("Búsqueda individual:", encontrado);
-            } else {
-                alert("No tenemos ese ejercicio en el catálogo base.");
-            }
-            break;
+const formEjercicio = document.getElementById('form-ejercicio');
+const sesionList = document.getElementById('sesion-list');
+const spanVolumenTotal = document.getElementById('volumen-total');
 
-        case "3":
-            let ejRealizado = prompt("Nombre del ejercicio que hiciste:");
-            let cantSeries = parseInt(prompt("¿Cuántas series?"));
-            let cantReps = parseInt(prompt("¿Cuántas repeticiones por serie?"));
-            let kgUsados = parseFloat(prompt("¿Con cuántos KG trabajaste?"));
 
-            if (ejRealizado && cantSeries > 0 && cantReps > 0 && kgUsados >= 0) {
-                let nuevoEj = new Ejercicio(ejRealizado, "Personalizado", "N/A", cantSeries, cantReps, kgUsados);
-                sesionDeHoy.push(nuevoEj);
-                alert(`✅ ¡Registrado! Agregaste: ${nuevoEj.nombre}`);
-            } else {
-                alert("⚠️ Datos inválidos. Registro cancelado.");
-            }
-            break;
+// --- 3. EVENTO 1: REGISTRO DE PERFIL (Reemplaza los prompts) ---
+formPerfil.addEventListener('submit', (evento) => {
+    evento.preventDefault(); // Evita que se recargue la página
 
-        case "4":
-            continuar = false; 
-            
-            if (sesionDeHoy.length > 0) {
-                // .map() y .reduce()
-                const resumenNombres = sesionDeHoy.map((ej) => ej.nombre).join(" | ");
-                const volumenTotalSesion = sesionDeHoy.reduce((acumulador, ej) => acumulador + ej.calcularVolumen(), 0);
-                
-                // Resumen usando los datos del perfil inicial
-                alert(
-                    "🛑 SESIÓN FINALIZADA 🛑\n\n" +
-                    `Entrenador: ${nombreUsuario}\n` +
-                    `Progreso de peso: De ${pesoActual}kg a ${pesoDeseado}kg\n\n` +
-                    `Ejercicios de hoy:\n${resumenNombres}\n\n` +
-                    `🔥 VOLUMEN TOTAL MOVIDO: ${volumenTotalSesion} KG.`
-                );
-                
-                console.log("=== RESUMEN FINAL ===");
-                console.log("Historial de la sesión:", sesionDeHoy);
-                console.log(`Volumen total de entrenamiento: ${volumenTotalSesion} KG`);
-            } else {
-                alert(`No registraste nada hoy, ${nombreUsuario}. ¡No aflojes que hay que llegar a los ${pesoDeseado}kg!`);
-            }
-            break;
+    // Capturo los valores de los inputs
+    const nombre = document.getElementById('input-nombre').value;
+    const pesoActual = parseFloat(document.getElementById('input-peso-actual').value);
+    const pesoDeseado = parseFloat(document.getElementById('input-peso-deseado').value);
+    const frecuencia = parseInt(document.getElementById('input-frecuencia').value);
 
-        default:
-            alert("Opción no válida. Ingresá un número del 1 al 4.");
-            break;
+    // La lógica original de cálculos
+    let diferenciaPeso = pesoDeseado - pesoActual;
+    let mensajeObjetivo = diferenciaPeso < 0 ? "bajar" : "subir";
+
+    // Oculto el perfil y muestro la app
+    seccionPerfil.classList.add('oculto');
+    seccionApp.classList.remove('oculto');
+
+    // Modifico el DOM para saludar
+    saludoUsuario.innerHTML = `
+        <h2>¡Hola ${nombre.toUpperCase()}! 👋</h2>
+        <p>Tu objetivo es <strong>${mensajeObjetivo} ${Math.abs(diferenciaPeso)} kg</strong> entrenando ${frecuencia} días a la semana.</p>
+    `;
+
+    // Renderizo el catálogo por primera vez
+    renderizarCatalogo(catalogo);
+});
+
+
+// --- 4. RENDERIZADO DINÁMICO DEL CATÁLOGO ---
+function renderizarCatalogo(arrayEjercicios) {
+    catalogoList.innerHTML = ''; // Limpiamos el contenedor
+
+    if (arrayEjercicios.length === 0) {
+        catalogoList.innerHTML = '<p class="text-muted">No se encontraron ejercicios.</p>';
+        return;
     }
+
+    arrayEjercicios.forEach(ej => {
+        // Uso de backticks para inyectar HTML 
+        const divItem = document.createElement('div');
+        divItem.className = 'item';
+        divItem.innerHTML = `
+            <div class="item-info">
+                <h4>${ej.nombre}</h4>
+                <p>Categoría: <span class="tag">${ej.categoria}</span></p>
+            </div>
+            <button class="btn-secondary" style="width: auto; padding: 0.4rem;" onclick="copiarAlFormulario('${ej.nombre}')">Usar</button>
+        `;
+        catalogoList.appendChild(divItem);
+    });
+}
+
+// Función auxiliar para que al clickear "Usar" en el catálogo, se llene el input
+function copiarAlFormulario(nombreEj) {
+    document.getElementById('ej-nombre').value = nombreEj;
+}
+
+
+// --- 5. EVENTO 2 (TECLADO): FILTRO DE BÚSQUEDA ---
+buscadorEjercicios.addEventListener('keyup', (evento) => {
+    const textoBusqueda = evento.target.value.toLowerCase();
+    
+    // Filtro usando el método filter de entregas pasadas
+    const filtrados = catalogo.filter(ej => 
+        ej.nombre.toLowerCase().includes(textoBusqueda) || 
+        ej.categoria.toLowerCase().includes(textoBusqueda)
+    );
+    
+    // Vuelvo a renderizar solo los filtrados
+    renderizarCatalogo(filtrados);
+});
+
+
+// --- 6. EVENTO 3: AGREGAR EJERCICIO A LA SESIÓN ---
+formEjercicio.addEventListener('submit', (evento) => {
+    evento.preventDefault();
+
+    const nombre = document.getElementById('ej-nombre').value;
+    const series = parseInt(document.getElementById('ej-series').value);
+    const reps = parseInt(document.getElementById('ej-reps').value);
+    const peso = parseFloat(document.getElementById('ej-peso').value);
+
+    // Creo el objeto instanciando tu clase
+    const nuevoEjercicio = new Ejercicio(contadorIdSesion, nombre, "Sesión", series, reps, peso);
+    sesionDeHoy.push(nuevoEjercicio);
+    contadorIdSesion++;
+
+    // Reseteo el formulario
+    formEjercicio.reset();
+
+    // Actualizo la vista de la sesión
+    renderizarSesion();
+});
+
+
+// --- 7. RENDERIZADO DE LA SESIÓN Y FEEDBACK VISUAL ---
+function renderizarSesion() {
+    sesionList.innerHTML = '';
+
+    if (sesionDeHoy.length === 0) {
+        sesionList.innerHTML = '<p class="text-muted">Todavía no agregaste ejercicios hoy.</p>';
+        spanVolumenTotal.innerText = '0';
+        return;
+    }
+
+    let volumenTotal = 0;
+
+    sesionDeHoy.forEach(ej => {
+        volumenTotal += ej.calcularVolumen();
+
+        const divItem = document.createElement('div');
+        divItem.className = 'item';
+        divItem.innerHTML = `
+            <div class="item-info">
+                <h4>${ej.nombre}</h4>
+                <p>${ej.series} series x ${ej.reps} reps | ${ej.peso} kg</p>
+                <p class="text-muted">Volumen: ${ej.calcularVolumen()} kg</p>
+            </div>
+            <button class="btn-delete" onclick="eliminarDeSesion(${ej.id})">Eliminar</button>
+        `;
+        sesionList.appendChild(divItem);
+    });
+
+    // Actualizo el DOM con el volumen total calculado
+    spanVolumenTotal.innerText = volumenTotal;
+}
+
+// Función para interactuar y eliminar un ítem agregado
+function eliminarDeSesion(idDeseado) {
+    sesionDeHoy = sesionDeHoy.filter(ej => ej.id !== idDeseado);
+    renderizarSesion();
 }
