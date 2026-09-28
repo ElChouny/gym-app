@@ -1,5 +1,5 @@
 // ==========================================
-// FitTracker - Pre-Entrega 9: Asincronismo y Promesas
+// FitTracker - Pre-Entrega 10: Fetch, Async/Await y Librerías
 // ==========================================
 
 // --- 1. CLASE Y DATOS BASE ---
@@ -18,17 +18,8 @@ class Ejercicio {
     }
 }
 
-// Catálogo predefinido
-const catalogo = [
-    new Ejercicio(1, "Press de Banca", "Push"),
-    new Ejercicio(2, "Flexiones", "Push"),
-    new Ejercicio(3, "Dominadas", "Pull"),
-    new Ejercicio(4, "Remo con Barra", "Pull"),
-    new Ejercicio(5, "Sentadilla Libre", "Legs"),
-    new Ejercicio(6, "Prensa", "Legs"),
-    new Ejercicio(7, "Curl de Biceps", "Pull"),
-    new Ejercicio(8, "Vuelos Laterales", "Push")
-];
+// Inicializo el catálogo vacío. Se llenará con el fetch.
+let catalogo = [];
 
 // Array para guardar los ejercicios de hoy
 let sesionDeHoy = [];
@@ -48,39 +39,28 @@ const sesionList = document.getElementById('sesion-list');
 const spanVolumenTotal = document.getElementById('volumen-total');
 
 
-// --- 3. INICIALIZACIÓN Y MANEJO DE ERRORES (try-catch-finally) ---
+// --- 3. INICIALIZACIÓN (Storage) ---
 document.addEventListener('DOMContentLoaded', () => {
     let perfilGuardado = null;
     let sesionGuardada = [];
 
-    // Utilizo try-catch para evitar que un JSON corrupto rompa mi simulador
     try {
         const storagePerfil = localStorage.getItem('fitTracker_perfil');
-        if (storagePerfil) {
-            perfilGuardado = JSON.parse(storagePerfil);
-        }
+        if (storagePerfil) perfilGuardado = JSON.parse(storagePerfil);
 
         const storageSesion = localStorage.getItem('fitTracker_sesion');
-        if (storageSesion) {
-            sesionGuardada = JSON.parse(storageSesion);
-        }
+        if (storageSesion) sesionGuardada = JSON.parse(storageSesion);
     } catch (error) {
-        console.error("⚠️ Error al leer los datos guardados en LocalStorage. Reiniciando estado.", error);
-        // Si hay error (ej. modificaron el JSON a mano en el navegador), limpio el storage por seguridad
+        console.error("⚠️ Error al leer LocalStorage.", error);
         localStorage.removeItem('fitTracker_perfil');
         localStorage.removeItem('fitTracker_sesion');
-    } finally {
-        // Este bloque se ejecuta siempre, indicando que la fase de carga finalizó
-        console.log("✔️ Intento de carga de datos inicializado (Bloque finally ejecutado).");
-    }
+    } 
     
-    // Si la lectura fue exitosa, procedo a inicializar la app
     if (perfilGuardado) {
         const { nombre, pesoActual, pesoDeseado, frecuencia } = perfilGuardado;
         activarSimulador(nombre, pesoActual, pesoDeseado, frecuencia);
     }
 
-    // Re-instancio los objetos de la sesión para no perder los métodos de la clase
     sesionDeHoy = sesionGuardada.map(ej => {
         const { id, nombre, categoria, series, reps, peso } = ej;
         return new Ejercicio(id, nombre, categoria, series, reps, peso);
@@ -122,10 +102,8 @@ function activarSimulador(nombre, pesoActual, pesoDeseado, frecuencia) {
         <button class="btn-delete mt-20" onclick="borrarPerfil()">Cerrar sesión / Borrar Perfil</button>
     `;
 
-    renderizarCatalogo(catalogo);
-    
-    // Llamo a mi temporizador asíncrono
-    mostrarNotificacionAsincrona();
+    // Llamo a la función asíncrona que trae los datos
+    obtenerEjercicios();
 }
 
 function borrarPerfil() {
@@ -135,39 +113,55 @@ function borrarPerfil() {
 }
 
 
-// --- 5. ASINCRONISMO (Temporizador con setTimeout) ---
-function mostrarNotificacionAsincrona() {
-    // Genero una espera de 3 segundos antes de mostrar el mensaje
-    setTimeout(() => {
-        // Creo el elemento dinámicamente desde JS
-        const notificacion = document.createElement('div');
-        notificacion.innerHTML = `<p>🔔 <strong>Tip del día:</strong> ¡No olvides mantenerte hidratado durante tu rutina!</p>`;
+// --- 5. ASINCRONISMO: FETCH A JSON LOCAL Y MANEJO DE ERRORES ---
+async function obtenerEjercicios() {
+    try {
+        // Feedback visual mientras carga
+        catalogoList.innerHTML = '<p class="text-muted">Cargando base de datos de ejercicios...</p>';
+
+        // Realizo la petición asíncrona
+        const respuesta = await fetch('./data/ejercicios.json');
         
-        // Le aplico estilos en línea para asegurarme de que se vea por encima de todo
-        notificacion.style.position = 'fixed';
-        notificacion.style.bottom = '20px';
-        notificacion.style.right = '20px';
-        notificacion.style.backgroundColor = '#2c3e50';
-        notificacion.style.color = '#fff';
-        notificacion.style.padding = '15px 20px';
-        notificacion.style.borderRadius = '8px';
-        notificacion.style.boxShadow = '0 4px 8px rgba(0,0,0,0.2)';
-        notificacion.style.zIndex = '9999';
-        notificacion.style.transition = 'opacity 0.5s ease';
-        notificacion.style.opacity = '0';
+        // Verifico que la respuesta de red sea exitosa
+        if (!respuesta.ok) {
+            throw new Error(`No se pudo cargar el archivo. Código: ${respuesta.status}`);
+        }
+
+        const data = await respuesta.json();
         
-        document.body.appendChild(notificacion);
+        // Transformo los datos planos en mi clase Ejercicio
+        catalogo = data.map(ej => new Ejercicio(ej.id, ej.nombre, ej.categoria));
 
-        // Hago que aparezca suavemente
-        setTimeout(() => notificacion.style.opacity = '1', 100);
+        // Muestro los datos en el DOM
+        renderizarCatalogo(catalogo);
 
-        // Lo elimino del DOM después de 5 segundos para no molestar al usuario
-        setTimeout(() => {
-            notificacion.style.opacity = '0';
-            setTimeout(() => notificacion.remove(), 500); 
-        }, 5000);
+        // Notificación de éxito usando la librería Toastify
+        Toastify({
+            text: "✅ Catálogo cargado con éxito",
+            duration: 3000,
+            gravity: "bottom", 
+            position: "right", 
+            style: { background: "#4caf50" }
+        }).showToast();
 
-    }, 3000); // 3000ms = 3 segundos de retraso inicial
+    } catch (error) {
+        // Capturo el error si falla el fetch
+        console.error("Error en la petición:", error);
+        catalogoList.innerHTML = '<p class="text-danger">Error al cargar el catálogo de ejercicios. Intenta recargar la página.</p>';
+        
+        // Notificación de error con Toastify
+        Toastify({
+            text: "❌ Error de conexión al cargar ejercicios",
+            duration: 4000,
+            gravity: "bottom", 
+            position: "right", 
+            style: { background: "#f44336" }
+        }).showToast();
+
+    } finally {
+        // Este bloque se ejecuta siempre, garantizando auditoría
+        console.log("Proceso de petición fetch (obtenerEjercicios) finalizado.");
+    }
 }
 
 
@@ -222,6 +216,15 @@ formEjercicio.addEventListener('submit', (evento) => {
     localStorage.setItem('fitTracker_sesion', JSON.stringify(sesionDeHoy));
     formEjercicio.reset();
     renderizarSesion();
+
+    // Librería: Feedback al usuario al agregar un ejercicio
+    Toastify({
+        text: `💪 ${nombre} agregado a tu rutina`,
+        duration: 2500,
+        gravity: "top", 
+        position: "center", 
+        style: { background: "#007bff", borderRadius: "8px" }
+    }).showToast();
 });
 
 function renderizarSesion() {
@@ -260,4 +263,12 @@ function eliminarDeSesion(idDeseado) {
     sesionDeHoy = sesionDeHoy.filter(ej => ej.id !== idDeseado);
     localStorage.setItem('fitTracker_sesion', JSON.stringify(sesionDeHoy));
     renderizarSesion();
+    
+    Toastify({
+        text: "🗑️ Ejercicio eliminado",
+        duration: 2000,
+        gravity: "top",
+        position: "center",
+        style: { background: "#6c757d", borderRadius: "8px" }
+    }).showToast();
 }

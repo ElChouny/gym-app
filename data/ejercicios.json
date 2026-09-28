@@ -1,0 +1,10 @@
+[
+    { "id": 1, "nombre": "Press de Banca", "categoria": "Push" },
+    { "id": 2, "nombre": "Flexiones", "categoria": "Push" },
+    { "id": 3, "nombre": "Dominadas", "categoria": "Pull" },
+    { "id": 4, "nombre": "Remo con Barra", "categoria": "Pull" },
+    { "id": 5, "nombre": "Sentadilla Libre", "categoria": "Legs" },
+    { "id": 6, "nombre": "Prensa", "categoria": "Legs" },
+    { "id": 7, "nombre": "Curl de Biceps", "categoria": "Pull" },
+    { "id": 8, "nombre": "Vuelos Laterales", "categoria": "Push" }
+]
