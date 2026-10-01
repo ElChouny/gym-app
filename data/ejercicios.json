@@ -1,10 +1,14 @@
 [
-    { "id": 1, "nombre": "Press de Banca", "categoria": "Push" },
-    { "id": 2, "nombre": "Flexiones", "categoria": "Push" },
-    { "id": 3, "nombre": "Dominadas", "categoria": "Pull" },
-    { "id": 4, "nombre": "Remo con Barra", "categoria": "Pull" },
-    { "id": 5, "nombre": "Sentadilla Libre", "categoria": "Legs" },
-    { "id": 6, "nombre": "Prensa", "categoria": "Legs" },
-    { "id": 7, "nombre": "Curl de Biceps", "categoria": "Pull" },
-    { "id": 8, "nombre": "Vuelos Laterales", "categoria": "Push" }
+  { "id": 1, "nombre": "Press de Banca Plano", "categoria": "Push" },
+  { "id": 2, "nombre": "Press Inclinado con Mancuernas", "categoria": "Push" },
+  { "id": 3, "nombre": "Press Militar con Barra", "categoria": "Push" },
+  { "id": 4, "nombre": "Fondos en Paralelas", "categoria": "Push" },
+  { "id": 5, "nombre": "Dominadas Pronas", "categoria": "Pull" },
+  { "id": 6, "nombre": "Remo con Barra", "categoria": "Pull" },
+  { "id": 7, "nombre": "Jalón al Pecho", "categoria": "Pull" },
+  { "id": 8, "nombre": "Curl de Bíceps con Barra Z", "categoria": "Pull" },
+  { "id": 9, "nombre": "Sentadilla Trasera con Barra", "categoria": "Legs" },
+  { "id": 10, "nombre": "Prensa 45°", "categoria": "Legs" },
+  { "id": 11, "nombre": "Peso Muerto Rumano", "categoria": "Legs" },
+  { "id": 12, "nombre": "Sillón de Cuádriceps", "categoria": "Legs" }
 ]

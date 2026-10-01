@@ -1,23 +1,51 @@
-# FitTracker - Simulador de Rutinas y Volumen de Entrenamiento
+# FitTracker - Simulador Interactivo de Entrenamiento y Control de Cargas
 
 ## Descripción del Proyecto
-FitTracker es una aplicación web interactiva diseñada para gestionar entrenamientos y calcular el volumen de carga (series x repeticiones x peso). Este proyecto es mi entrega para el curso de JavaScript, demostrando una arquitectura de estado moderna, persistencia local y comportamiento asíncrono con consumo de APIs.
+**FitTracker** es una aplicación web interactiva desarrollada para permitir a los usuarios planificar rutinas de fuerza, seleccionar ejercicios de una base de datos centralizada y calcular de forma automatizada el **volumen total de carga en kilogramos** (Series × Repeticiones × Peso).
 
-## Características Nuevas (Pre-entrega 10: Fetch y Librerías)
-- **Consumo de API Local (Fetch API):** Migré el catálogo estático a un archivo `ejercicios.json` dentro de una carpeta `/data`. Implementé una función asíncrona (`async/await`) para consumir esta data simulando una base de datos real.
-- **Manejo de Errores Defensivo:** Utilizo la estructura `try-catch-finally` dentro de la petición Fetch. Si el archivo JSON no está disponible o la red falla, capturo el error y notifico al usuario sin romper el código.
-- **Integración de Librería (Toastify):** Reemplacé los console.logs y alertas nativas incorporando la librería Toastify vía CDN para brindar un feedback elegante y no bloqueante (Notificaciones de carga exitosa, error de conexión, y alertas al agregar/eliminar ejercicios de la rutina).
+Este proyecto constituye la **Entrega Final del curso de JavaScript**, integrando el consumo asíncrono de datos con Fetch, persistencia de estado mediante Web Storage, manipulación dinámica del DOM sin alertas nativas y librerías externas de interfaz de usuario.
 
-## Características Anteriores
-- **Registro de Perfil:** Cálculos dinámicos basados en inputs del usuario.
-- **Persistencia de Datos (LocalStorage):** Sincronización continua del estado usando JSON.
-- **Operadores Modernos:** Utilización de Nullish Coalescing (`??`), operadores ternarios y destructuring.
+---
 
-## Estructura del Repositorio
-- `index.html` (Vista principal)
-- `data/` -> `ejercicios.json` (Base de datos simulada)
-- `css/` -> `style.css` (Hoja de estilos)
-- `js/` -> `main.js` (Lógica central del simulador)
+## 🛠️ Tecnologías e Integraciones
+* **HTML5 & CSS3:** Maquetación semántica, diseño responsivo CSS Grid y estilos personalizados.
+* **JavaScript ES6+:** Programación Orientada a Objetos (Clases), manipulación del DOM, desacoplamiento de eventos y sintaxis avanzada (destructuring, operador ternario, operadores lógicos).
+* **Fetch API (Async/Await):** Carga e integración asíncrona de la base de datos simulada en `/data/ejercicios.json`.
+* **Web Storage (LocalStorage):** Persistencia y gestión completa de datos (guardar, modificar, eliminar y vaciar).
+* **Librerías Externas:**
+  * **SweetAlert2:** Para ventanas emergentes interactivas de confirmación y cierre del circuito de entrenamiento.
+  * **Toastify.js:** Para notificaciones contextuales y no invasivas.
 
-## Autor
+---
+
+## 🚀 Instrucciones de Ejecución Local
+
+Para garantizar la correcta ejecución del consumo asíncrono (`fetch`), el proyecto debe ser servido mediante un servidor HTTP local debido a las restricciones CORS de los navegadores al utilizar el protocolo `file://`.
+
+### Pasos para ejecutar:
+1. Clonar el repositorio: `git clone https://github.com/TU_USUARIO/fit-tracker.git`
+2. Abrir la carpeta del proyecto en **Visual Studio Code**.
+3. Iniciar un servidor HTTP local:
+   * **Opción recomendada:** Hacer clic derecho sobre `index.html` y seleccionar **Open with Live Server**.
+   * **Opción alternativa:** Ejecutar `npx serve` desde la terminal integrada en la raíz del proyecto.
+4. Abrir la consola del navegador (**F12**) para inspeccionar los eventos y el estado de la aplicación.
+
+---
+
+## 📂 Estructura del Repositorio
+```text
+fit-tracker/
+├── assets/
+│   ├── favicon.svg          # Ícono de pestaña del navegador
+│   └── logo.svg             # Logo principal de la aplicación
+├── css/
+│   └── style.css            # Estilos principales de la aplicación
+├── data/
+│   └── ejercicios.json      # Base de datos simulada en JSON
+├── js/
+│   └── main.js              # Lógica principal, asincronismo y eventos
+├── index.html               # Archivo HTML único en raíz
+└── README.md                # Documentación del proyecto
+
+👤 Autor
 Antonio Tomas Torquatti

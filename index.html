@@ -3,93 +3,109 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FitTracker - Simulador de Entrenamiento</title>
-    <!-- Enlace correcto al CSS en su carpeta -->
-    <link rel="stylesheet" href="css/style.css">
+    <title>FitTracker - Gestor de Rutinas y Entrenamiento</title>
+    
+    <!-- Favicon desde la carpeta assets -->
+    <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+    
+    <!-- Librerías Externas CSS -->
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    
+    <!-- Estilos Propios -->
+    <link rel="stylesheet" href="css/style.css">
+    
+    <!-- Scripts con atributo defer en el HEAD obligatorios por consigna -->
+    <script defer src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script defer src="js/main.js"></script>
 </head>
 <body>
 
     <header class="header">
-        <h1>🏋️ FitTracker</h1>
+        <div class="header-brand">
+            <img src="assets/logo.svg" alt="FitTracker Logo" class="header-logo">
+        </div>
+        <p>Tu asistente personal para el control de cargas y progreso de entrenamiento</p>
     </header>
 
     <main class="container">
-        
-        <!-- 1. PANTALLA DE PERFIL (Lo que antes era con prompt) -->
+        <!-- Sección de Perfil del Usuario -->
         <section id="seccion-perfil" class="card">
-            <h2>Configurá tu Perfil</h2>
+            <h2>Configura tu Perfil</h2>
             <form id="form-perfil">
-                <div class="input-group">
-                    <label for="input-nombre">Tu Nombre:</label>
-                    <input type="text" id="input-nombre" required placeholder="Ej: Tomas">
+                <div class="form-group">
+                    <label for="input-nombre">Nombre:</label>
+                    <input type="text" id="input-nombre" placeholder="Ej: Tomas" required>
                 </div>
-                <div class="input-group">
+                <div class="form-group">
                     <label for="input-peso-actual">Peso Actual (kg):</label>
-                    <input type="number" id="input-peso-actual" required placeholder="Ej: 94">
+                    <input type="number" id="input-peso-actual" step="0.1" placeholder="Ej: 75" required>
                 </div>
-                <div class="input-group">
+                <div class="form-group">
                     <label for="input-peso-deseado">Peso Objetivo (kg):</label>
-                    <input type="number" id="input-peso-deseado" required placeholder="Ej: 90 o 97">
+                    <input type="number" id="input-peso-deseado" step="0.1" placeholder="Ej: 80" required>
                 </div>
-                <div class="input-group">
-                    <label for="input-frecuencia">Días de entreno por semana:</label>
-                    <input type="number" id="input-frecuencia" required placeholder="Ej: 3">
+                <div class="form-group">
+                    <label for="input-frecuencia">Días de entrenamiento por semana:</label>
+                    <input type="number" id="input-frecuencia" min="1" max="7" placeholder="Ej: 4" required>
                 </div>
-                <button type="submit" class="btn-primary">Ingresar al Simulador</button>
-                <p id="mensaje-error-perfil" class="error-msg"></p>
+                <button type="submit" class="btn-primary">Guardar Perfil e Iniciar</button>
             </form>
         </section>
 
-        <!-- 2. PANTALLA PRINCIPAL DEL SIMULADOR (Oculta al inicio) -->
+        <!-- Sección Principal de la App (Oculta al inicio) -->
         <section id="seccion-app" class="oculto">
-            
-            <!-- Saludo dinámico con tus cálculos anteriores -->
-            <div id="saludo-usuario" class="card destacado"></div>
+            <div id="saludo-usuario" class="card saludo-card"></div>
 
-            <div class="grid-layout">
-                <!-- Columna Izquierda: Catálogo y Buscador -->
+            <div id="tip-dia-container"></div>
+
+            <div class="grid-app">
+                <!-- Columna Izquierda: Catálogo -->
                 <div class="card">
                     <h3>Catálogo de Ejercicios</h3>
-                    <!-- Evento de teclado: Buscador -->
                     <input type="text" id="buscador-ejercicios" placeholder="Buscar por nombre o categoría (Push/Pull/Legs)...">
-                    
-                    <div id="catalogo-list" class="lista-items">
-                        <!-- Acá se renderiza el catálogo dinámicamente -->
-                    </div>
+                    <div id="catalogo-list" class="lista-contenedor"></div>
                 </div>
 
-                <!-- Columna Derecha: Registro y Sesión de hoy -->
+                <!-- Columna Derecha: Registro de Sesión -->
                 <div class="card">
-                    <h3>Registrar Ejercicio</h3>
+                    <h3>Registrar Ejercicio de Hoy</h3>
                     <form id="form-ejercicio">
-                        <div class="input-group">
-                            <input type="text" id="ej-nombre" required placeholder="Nombre del ejercicio">
+                        <div class="form-group">
+                            <label for="ej-nombre">Nombre del Ejercicio:</label>
+                            <input type="text" id="ej-nombre" placeholder="Selecciona del catálogo o escribe uno" required>
                         </div>
-                        <div class="input-group-row">
-                            <input type="number" id="ej-series" required placeholder="Series" min="1">
-                            <input type="number" id="ej-reps" required placeholder="Reps" min="1">
-                            <input type="number" id="ej-peso" required placeholder="Peso (kg)" min="0">
+                        <div class="form-group">
+                            <label for="ej-series">Series:</label>
+                            <input type="number" id="ej-series" min="1" required>
                         </div>
-                        <button type="submit" class="btn-secondary">+ Agregar a la sesión</button>
+                        <div class="form-group">
+                            <label for="ej-reps">Repeticiones por serie:</label>
+                            <input type="number" id="ej-reps" min="1" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="ej-peso">Peso Cargado (kg):</label>
+                            <input type="number" id="ej-peso" min="0" step="0.5" required>
+                        </div>
+                        <button type="submit" class="btn-primary">Agregar a la Sesión</button>
                     </form>
 
-                    <h3 class="mt-20">Sesión de Hoy</h3>
-                    <div id="sesion-list" class="lista-items">
-                        <p class="text-muted">Todavía no agregaste ejercicios hoy.</p>
+                    <div class="header-rutina mt-20">
+                        <h4>Rutina del Día</h4>
+                        <button id="btn-vaciar-rutina" class="btn-warning-sm oculto">Vaciar Rutina</button>
                     </div>
                     
-                    <div class="resumen-volumen">
-                        <h4>Volumen Total Movido: <span id="volumen-total">0</span> KG</h4>
+                    <div id="sesion-list" class="lista-contenedor"></div>
+                    
+                    <div class="resumen-volumen card-highlight">
+                        <h4>Volumen Total de Carga: <span id="volumen-total">0</span> kg</h4>
+                        <button id="btn-finalizar-sesion" class="btn-success mt-10 oculto">🏁 Finalizar y Registrar Entrenamiento</button>
                     </div>
                 </div>
             </div>
-
         </section>
     </main>
 
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
-    <!-- Enlace correcto al JS en su carpeta -->
-    <script src="js/main.js"></script>
 </body>
 </html>

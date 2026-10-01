@@ -1,190 +1,234 @@
-/* Reset básico y variables */
+/* --- RESET Y VARIABLES --- */
 * {
+    box-sizing: border-box;
     margin: 0;
     padding: 0;
-    box-sizing: border-box;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 body {
-    background-color: #121212;
-    color: #f1f1f1;
+    background-color: #0f172a;
+    color: #f8fafc;
+    min-height: 100vh;
+    padding-bottom: 40px;
 }
 
-/* Header */
 .header {
-    background-color: #e50000; /* Rojo */
-    color: white;
     text-align: center;
-    padding: 1.5rem;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+    padding: 1.5rem 1rem;
+    background-color: #1e293b;
+    border-bottom: 2px solid #334155;
 }
 
-/* Contenedores principales */
+.header-brand {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 0.5rem;
+}
+
+.header-logo {
+    max-width: 240px;
+    height: auto;
+}
+
+.header p {
+    color: #94a3b8;
+    font-size: 0.95rem;
+}
+
 .container {
-    max-width: 1000px;
+    max-width: 1100px;
     margin: 2rem auto;
     padding: 0 1rem;
 }
 
 .card {
-    background-color: #1e1e1e;
-    border-radius: 8px;
+    background-color: #1e293b;
+    border-radius: 12px;
     padding: 1.5rem;
     margin-bottom: 1.5rem;
-    border: 1px solid #333;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
 }
 
-.destacado {
-    border-left: 5px solid #e50000;
+.saludo-card {
+    border-left: 5px solid #38bdf8;
 }
 
-.grid-layout {
+.card-highlight {
+    background-color: #0f172a;
+    border: 1px solid #38bdf8;
+    padding: 1rem;
+    border-radius: 8px;
+    margin-top: 1rem;
+    text-align: center;
+}
+
+.grid-app {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr;
     gap: 1.5rem;
 }
 
-@media (max-width: 768px) {
-    .grid-layout {
-        grid-template-columns: 1fr;
+@media (min-width: 768px) {
+    .grid-app {
+        grid-template-columns: 1fr 1fr;
     }
 }
 
-/* Formularios e Inputs */
-.input-group {
-    margin-bottom: 1rem;
+.form-group {
     display: flex;
     flex-direction: column;
-}
-
-.input-group-row {
-    display: flex;
-    gap: 0.5rem;
     margin-bottom: 1rem;
 }
 
-label {
-    margin-bottom: 0.5rem;
-    font-size: 0.9rem;
-    color: #ccc;
+.form-group label {
+    margin-bottom: 0.4rem;
+    font-weight: 600;
+    color: #cbd5e1;
 }
 
-input {
-    padding: 0.7rem;
-    border: 1px solid #444;
-    border-radius: 4px;
-    background-color: #2c2c2c;
-    color: white;
+input[type="text"],
+input[type="number"] {
+    padding: 0.75rem;
+    border-radius: 6px;
+    border: 1px solid #475569;
+    background-color: #0f172a;
+    color: #ffffff;
+    font-size: 1rem;
 }
 
 input:focus {
-    outline: none;
-    border-color: #e50000;
+    outline: 2px solid #38bdf8;
+    border-color: transparent;
 }
 
-#buscador-ejercicios {
-    width: 100%;
-    margin-bottom: 1rem;
-}
-
-/* Botones */
 button {
-    padding: 0.8rem;
-    border: none;
-    border-radius: 4px;
     cursor: pointer;
+    border: none;
+    border-radius: 6px;
     font-weight: bold;
-    width: 100%;
-    transition: background-color 0.2s;
+    transition: background-color 0.2s, transform 0.1s;
+}
+
+button:active {
+    transform: scale(0.98);
 }
 
 .btn-primary {
-    background-color: #e50000;
+    width: 100%;
+    padding: 0.75rem;
+    background-color: #0284c7;
     color: white;
 }
 
 .btn-primary:hover {
-    background-color: #cc0000;
+    background-color: #0369a1;
 }
 
 .btn-secondary {
-    background-color: #4CAF50;
-    color: white;
+    background-color: #334155;
+    color: #f8fafc;
 }
 
 .btn-secondary:hover {
-    background-color: #45a049;
+    background-color: #475569;
 }
 
 .btn-delete {
-    background-color: transparent;
-    color: #ff4444;
-    border: 1px solid #ff4444;
-    padding: 0.3rem 0.6rem;
-    width: auto;
-    font-size: 0.8rem;
+    background-color: #ef4444;
+    color: white;
+    padding: 0.4rem 0.8rem;
 }
 
 .btn-delete:hover {
-    background-color: #ff4444;
+    background-color: #dc2626;
+}
+
+.btn-success {
+    background-color: #10b981;
     color: white;
+    padding: 0.75rem 1rem;
+    width: 100%;
+    font-size: 1rem;
 }
 
-/* Listas dinámicas */
-.lista-items {
-    max-height: 300px;
-    overflow-y: auto;
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
+.btn-success:hover {
+    background-color: #059669;
 }
 
-.item {
-    background-color: #2c2c2c;
-    padding: 0.8rem;
-    border-radius: 4px;
+.btn-warning-sm {
+    background-color: #f59e0b;
+    color: #0f172a;
+    padding: 0.3rem 0.6rem;
+    font-size: 0.8rem;
+}
+
+.btn-warning-sm:hover {
+    background-color: #d97706;
+}
+
+.header-rutina {
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
 
-.item-info h4 {
-    margin-bottom: 0.2rem;
-    color: #fff;
-}
-
-.item-info p {
-    font-size: 0.8rem;
-    color: #aaa;
-}
-
-.tag {
-    background-color: #444;
-    padding: 2px 6px;
-    border-radius: 4px;
-    font-size: 0.7rem;
-}
-
-/* Utilidades */
 .oculto {
     display: none !important;
 }
 
-.mt-20 {
-    margin-top: 20px;
+.item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.8rem;
+    background-color: #0f172a;
+    border-radius: 6px;
+    margin-bottom: 0.6rem;
+    border: 1px solid #334155;
 }
 
-.text-muted {
-    color: #777;
-    font-style: italic;
+.item-info h4 {
+    color: #f8fafc;
 }
 
-.resumen-volumen {
-    margin-top: 1.5rem;
-    padding: 1rem;
-    background-color: #2c2c2c;
+.item-info p {
+    font-size: 0.85rem;
+    color: #94a3b8;
+}
+
+.tag {
+    background-color: #0369a1;
+    color: white;
+    padding: 0.1rem 0.4rem;
     border-radius: 4px;
-    text-align: center;
-    border-bottom: 3px solid #e50000;
+    font-size: 0.75rem;
+}
+
+.lista-contenedor {
+    margin-top: 1rem;
+    max-height: 350px;
+    overflow-y: auto;
+}
+
+.mt-10 { margin-top: 10px; }
+.mt-20 { margin-top: 20px; }
+.text-muted { color: #94a3b8; }
+.text-danger { color: #f87171; }
+
+/* --- ESTILOS DE TOASTIFY Y ELEMENTOS DINÁMICOS --- */
+.toast-exito { background: #10b981 !important; border-radius: 8px !important; }
+.toast-error { background: #ef4444 !important; border-radius: 8px !important; }
+.toast-info { background: #0284c7 !important; border-radius: 8px !important; }
+.toast-delete { background: #64748b !important; border-radius: 8px !important; }
+
+.tip-banner {
+    background-color: #0f172a;
+    color: #38bdf8;
+    padding: 0.8rem 1rem;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+    border-left: 4px solid #38bdf8;
+    font-size: 0.9rem;
 }
